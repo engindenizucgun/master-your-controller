@@ -7,6 +7,7 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
 volatile uint32_t milliseconds = 0;
+volatile uint32_t elapsedMilliseconds = 0;
 volatile uint32_t seconds = 0;
 volatile uint32_t minutes = 0;
 volatile uint32_t hours = 0;
@@ -85,11 +86,25 @@ int main(void)
 	        if (milliseconds >= 1000) {
 	            milliseconds = 0;
 	            seconds++;
+	            if (seconds >= 60) {
+	                seconds = 0;
+	                minutes++;
+	                if (minutes >= 60) {
+	                    minutes = 0;
+	                    hours++;
+	                    if (hours >= 24) {
+	                        hours = 0;
+	                    }
+	                }
+	            }
 	            PrintClockValue(); // Call the PrintClockValue() function to print the clock value every second.
 	        }
 	    } else {
+	        // If in adjustment mode, keep track of elapsed time
 	        if (milliseconds >= 20000) {
 	            adjustmentMode = 0;
+	            // Subtract the elapsed time during adjustment mode from the current milliseconds counter
+	            milliseconds -= elapsedMilliseconds;
 	            PrintClockValue(); // Call the PrintClockValue() function when exiting adjustment mode.
 	        }
 	    }
@@ -175,6 +190,8 @@ void EXTI2_IRQHandler(void) {
 
 void EnterAdjustmentMode(void) {
   adjustmentMode = 1;
+  elapsedMilliseconds = milliseconds;
+
 }
 
 // Adjust the hour
