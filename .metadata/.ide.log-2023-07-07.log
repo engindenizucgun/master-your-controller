@@ -1,0 +1,34 @@
+2023-07-07 07:50:28,856 [INFO] I2cTimingTraitement:330 - 0x10909CEC
+2023-07-07 07:50:55,092 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 307599560 Bytes (783286272)
+2023-07-07 07:50:58,492 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 397776960 Bytes (783286272)
+2023-07-07 07:50:59,096 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-07-07 07:50:59,096 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-07-07 07:50:59,096 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-07-07 07:50:59,097 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-07-07 07:50:59,097 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-07-07 07:50:59,097 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-07-07 07:50:59,098 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.1.202304191431\\db\
+2023-07-07 07:50:59,574 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\license.tmp_save
+2023-07-07 07:50:59,811 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\license.tmp
+2023-07-07 07:50:59,911 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\gpio.tmp_save
+2023-07-07 07:51:00,076 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\gpio.tmp
+2023-07-07 07:51:00,345 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\stm32l4xx_it.c_save
+2023-07-07 07:51:00,635 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\stm32l4xx_it.c
+2023-07-07 07:51:00,680 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\stm32l4xx_it.h_save
+2023-07-07 07:51:00,817 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\stm32l4xx_it.h
+2023-07-07 07:51:00,851 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\stm32l4xx_hal_msp.c_save
+2023-07-07 07:51:01,308 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\stm32l4xx_hal_msp.c
+2023-07-07 07:51:01,315 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\system.tmp_save
+2023-07-07 07:51:01,409 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\MXTmpFiles\system.tmp
+2023-07-07 07:51:01,444 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\stm32l4xx_hal_conf.h_save
+2023-07-07 07:51:01,699 [INFO] CodeEngine:335 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\stm32l4xx_hal_conf.h
+2023-07-07 07:51:01,799 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\main.h_save
+2023-07-07 07:51:01,982 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Inc\main.h
+2023-07-07 07:51:02,008 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\main.c_save
+2023-07-07 07:51:02,271 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\I2Cheatsensor\Core\Src\main.c
+2023-07-07 07:51:05,653 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 1121mS.
+2023-07-07 07:51:05,676 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-07-07 07:51:06,940 [INFO] ConfigFileManager:1483 - The Die is : DIE435
+2023-07-07 07:51:12,686 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 7010mS.
+2023-07-07 07:51:12,687 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 1mS.
+2023-07-07 07:51:12,692 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.

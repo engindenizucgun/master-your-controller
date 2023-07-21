@@ -1,0 +1,62 @@
+12:54:50 **** Incremental Build of configuration Debug for project ledproject ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:64:3: warning: implicit declaration of function 'MX_GPIO_Init'; did you mean 'HAL_GPIO_Init'? [-Wimplicit-function-declaration]
+   64 |   MX_GPIO_Init();
+      |   ^~~~~~~~~~~~
+      |   HAL_GPIO_Init
+../Core/Src/main.c:65:3: warning: implicit declaration of function 'MX_USART2_UART_Init' [-Wimplicit-function-declaration]
+   65 |   MX_USART2_UART_Init();
+      |   ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:66:3: warning: implicit declaration of function 'MX_TIM16_Init' [-Wimplicit-function-declaration]
+   66 |   MX_TIM16_Init();
+      |   ^~~~~~~~~~~~~
+../Core/Src/main.c:138:13: error: invalid storage class for function 'MX_TIM16_Init'
+  138 | static void MX_TIM16_Init(void)
+      |             ^~~~~~~~~~~~~
+../Core/Src/main.c:138:13: warning: conflicting types for 'MX_TIM16_Init'
+../Core/Src/main.c:138:13: error: static declaration of 'MX_TIM16_Init' follows non-static declaration
+../Core/Src/main.c:66:3: note: previous implicit declaration of 'MX_TIM16_Init' was here
+   66 |   MX_TIM16_Init();
+      |   ^~~~~~~~~~~~~
+../Core/Src/main.c:167:13: error: invalid storage class for function 'MX_USART2_UART_Init'
+  167 | static void MX_USART2_UART_Init(void)
+      |             ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:167:13: warning: conflicting types for 'MX_USART2_UART_Init'
+../Core/Src/main.c:167:13: error: static declaration of 'MX_USART2_UART_Init' follows non-static declaration
+../Core/Src/main.c:65:3: note: previous implicit declaration of 'MX_USART2_UART_Init' was here
+   65 |   MX_USART2_UART_Init();
+      |   ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:199:13: error: invalid storage class for function 'MX_GPIO_Init'
+  199 | static void MX_GPIO_Init(void)
+      |             ^~~~~~~~~~~~
+../Core/Src/main.c:199:13: warning: conflicting types for 'MX_GPIO_Init'
+../Core/Src/main.c:199:13: error: static declaration of 'MX_GPIO_Init' follows non-static declaration
+../Core/Src/main.c:64:3: note: previous implicit declaration of 'MX_GPIO_Init' was here
+   64 |   MX_GPIO_Init();
+      |   ^~~~~~~~~~~~
+../Core/Src/main.c:265:1: error: expected declaration or statement at end of input
+  265 | }
+      | ^
+At top level:
+../Core/Src/main.c:261:6: warning: 'Error_Handler' defined but not used [-Wunused-function]
+  261 | void Error_Handler(void)
+      |      ^~~~~~~~~~~~~
+../Core/Src/main.c:199:13: warning: 'MX_GPIO_Init' defined but not used [-Wunused-function]
+  199 | static void MX_GPIO_Init(void)
+      |             ^~~~~~~~~~~~
+../Core/Src/main.c:167:13: warning: 'MX_USART2_UART_Init' defined but not used [-Wunused-function]
+  167 | static void MX_USART2_UART_Init(void)
+      |             ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:138:13: warning: 'MX_TIM16_Init' defined but not used [-Wunused-function]
+  138 | static void MX_TIM16_Init(void)
+      |             ^~~~~~~~~~~~~
+../Core/Src/main.c:88:6: warning: 'SystemClock_Config' defined but not used [-Wunused-function]
+   88 | void SystemClock_Config(void)
+      |      ^~~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+12:54:51 Build Failed. 8 errors, 11 warnings. (took 375ms)
+

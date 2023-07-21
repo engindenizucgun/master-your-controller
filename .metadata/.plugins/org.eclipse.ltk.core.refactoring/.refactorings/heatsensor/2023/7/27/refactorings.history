@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;heatsensor/Core/Inc/onewire.h&apos; to &apos;Onewire.h&apos;" description="Rename resource &apos;onewire.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/onewire.h" name="Onewire.h" stamp="1688619606994" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;heatsensor/Core/Inc/Onewire.h&apos; to &apos;onewire.h&apos;" description="Rename resource &apos;Onewire.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/Onewire.h" name="onewire.h" stamp="1688620142588" updateReferences="true"/>
+</session>

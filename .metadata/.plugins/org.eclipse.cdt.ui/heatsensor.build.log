@@ -1,0 +1,27 @@
+09:48:45 **** Incremental Build of configuration Debug for project heatsensor ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/onewire.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/onewire.d" -MT"Core/Src/onewire.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/onewire.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:28:38: warning: passing argument 1 of 'onewire_read_temperature' from incompatible pointer type [-Wincompatible-pointer-types]
+   28 |         if (onewire_read_temperature(&temperature) == ONEWIRE_OK)
+      |                                      ^~~~~~~~~~~~
+      |                                      |
+      |                                      float *
+In file included from ../Core/Src/main.c:2:
+../Core/Inc/onewire.h:16:57: note: expected 'GPIO_TypeDef *' but argument is of type 'float *'
+   16 | onewire_status_t onewire_read_temperature(GPIO_TypeDef *port, uint16_t pin, float *temperature);
+      |                                           ~~~~~~~~~~~~~~^~~~
+../Core/Src/main.c:28:13: error: too few arguments to function 'onewire_read_temperature'
+   28 |         if (onewire_read_temperature(&temperature) == ONEWIRE_OK)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:2:
+../Core/Inc/onewire.h:16:18: note: declared here
+   16 | onewire_status_t onewire_read_temperature(GPIO_TypeDef *port, uint16_t pin, float *temperature);
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:37: Core/Src/main.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+09:48:46 Build Failed. 3 errors, 1 warnings. (took 544ms)
+

@@ -1,0 +1,35 @@
+2023-07-19 08:56:33,943 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 831208568 Bytes (1073741824)
+2023-07-19 08:56:36,588 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 920319744 Bytes (1073741824)
+2023-07-19 08:56:36,963 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-07-19 08:56:36,963 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-07-19 08:56:36,963 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8L4
+2023-07-19 08:56:36,964 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-07-19 08:56:36,964 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-07-19 08:56:36,964 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-07-19 08:56:36,968 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.1.202304191431\\db\
+2023-07-19 08:56:37,373 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp_save
+2023-07-19 08:56:37,493 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp
+2023-07-19 08:56:37,600 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp_save
+2023-07-19 08:56:37,725 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp
+2023-07-19 08:56:37,941 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c_save
+2023-07-19 08:56:38,188 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c
+2023-07-19 08:56:38,201 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h_save
+2023-07-19 08:56:38,292 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h
+2023-07-19 08:56:38,329 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c_save
+2023-07-19 08:56:38,467 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c
+2023-07-19 08:56:38,477 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp_save
+2023-07-19 08:56:38,543 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp
+2023-07-19 08:56:38,574 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h_save
+2023-07-19 08:56:38,680 [INFO] CodeEngine:335 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h
+2023-07-19 08:56:38,715 [WARN] IPConfigManager:3431 - IP not found : TIM
+2023-07-19 08:56:38,716 [WARN] CodeGenerator:3754 - IP not found : null
+2023-07-19 08:56:38,743 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h_save
+2023-07-19 08:56:38,868 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h
+2023-07-19 08:56:38,893 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c_save
+2023-07-19 08:56:39,018 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c
+2023-07-19 08:56:39,641 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 173mS.
+2023-07-19 08:56:39,644 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-07-19 08:56:40,040 [INFO] ConfigFileManager:1483 - The Die is : DIE435
+2023-07-19 08:56:41,879 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 2235mS.
+2023-07-19 08:56:41,880 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 1mS.
+2023-07-19 08:56:41,888 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.

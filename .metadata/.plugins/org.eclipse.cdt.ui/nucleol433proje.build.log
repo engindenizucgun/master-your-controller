@@ -1,0 +1,51 @@
+04:19:03 **** Incremental Build of configuration Debug for project nucleol433proje ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:31:1: error: unknown type name 'OWire'
+   31 | OWire owire;
+      | ^~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:101:3: warning: implicit declaration of function 'OW_Init' [-Wimplicit-function-declaration]
+  101 |   OW_Init(&owire, ONEWIRE_GPIO_PORT, ONEWIRE_GPIO_PIN);
+      |   ^~~~~~~
+../Core/Src/main.c:108:4: warning: implicit declaration of function 'OW_Reset' [-Wimplicit-function-declaration]
+  108 |    OW_Reset(&owire);
+      |    ^~~~~~~~
+../Core/Src/main.c:109:4: warning: implicit declaration of function 'OW_WriteByte' [-Wimplicit-function-declaration]
+  109 |    OW_WriteByte(&owire, 0xCC); // Skip ROM command
+      |    ^~~~~~~~~~~~
+../Core/Src/main.c:119:14: warning: implicit declaration of function 'OW_ReadByte' [-Wimplicit-function-declaration]
+  119 |     buf[i] = OW_ReadByte(&owire);
+      |              ^~~~~~~~~~~
+../Core/Src/main.c:122:8: warning: implicit declaration of function 'OW_CRC8' [-Wimplicit-function-declaration]
+  122 |    if (OW_CRC8(buf, 8) == buf[8])
+      |        ^~~~~~~
+../Core/Src/main.c: In function 'SystemClock_Config':
+../Core/Src/main.c:155:20: error: 'RCC_OscInitTypeDef' has no member named 'HSEPredivValue'
+  155 |   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+      |                    ^
+../Core/Src/main.c:155:38: error: 'RCC_HSE_PREDIV_DIV1' undeclared (first use in this function)
+  155 |   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+      |                                      ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:155:38: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Src/main.c:158:25: error: 'RCC_PLLInitTypeDef' has no member named 'PLLMUL'; did you mean 'PLLM'?
+  158 |   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+      |                         ^~~~~~
+      |                         PLLM
+../Core/Src/main.c:158:34: error: 'RCC_PLL_MUL9' undeclared (first use in this function); did you mean 'RCC_PLLMUL_3'?
+  158 |   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+      |                                  ^~~~~~~~~~~~
+      |                                  RCC_PLLMUL_3
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:128:36: warning: ' C
+   ' directive writing 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]
+  128 |     sprintf(msg, "Temperature: %.2f C\r\n", temp_c);
+      |                                    ^~~~~~
+../Core/Src/main.c:128:5: note: 'sprintf' output between 21 and 331 bytes into a destination of size 20
+  128 |     sprintf(msg, "Temperature: %.2f C\r\n", temp_c);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+04:19:04 Build Failed. 6 errors, 6 warnings. (took 1s.78ms)
+
