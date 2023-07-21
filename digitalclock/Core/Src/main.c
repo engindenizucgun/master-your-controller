@@ -64,8 +64,6 @@ void SystemClock_Config(void)
 int main(void)
 {
 
-	printf("test\r\n");
-	fflush(stdout);
 
 	RCC ->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 	SystemClock_Config();
@@ -77,6 +75,9 @@ int main(void)
 	MX_GPIO_Init();
 	MX_USART2_UART_Init();
 	MX_TIM2_Init();
+
+// this is a test
+
 
 
 	while (1)
