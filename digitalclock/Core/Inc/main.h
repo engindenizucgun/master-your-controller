@@ -61,8 +61,8 @@ void Error_Handler(void);
 #define B1_GPIO_Port GPIOC
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
-#define SET_BUTTON_Pin GPIO_PIN_0
-#define SET_BUTTON_GPIO_Port GPIOC
+#define SET_Pin GPIO_PIN_0
+#define SET_GPIO_Port GPIOC
 #define INCREASE_Pin GPIO_PIN_1
 #define INCREASE_GPIO_Port GPIOC
 #define DECREASE_Pin GPIO_PIN_2
