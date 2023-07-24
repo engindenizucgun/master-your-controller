@@ -7,11 +7,12 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
 volatile uint32_t milliseconds = 0;
-volatile uint32_t elapsedMilliseconds = 0;
 volatile uint32_t seconds = 0;
 volatile uint32_t minutes = 0;
 volatile uint32_t hours = 0;
 volatile uint32_t adjustmentMode = 0;
+uint32_t adjustmentStart = 0;
+
 
 void SysTick_Handler(void);
 void GPIO_Init(void);
@@ -65,17 +66,20 @@ void SystemClock_Config(void)
 int main(void)
 {
 
+	// Send a simple string through UART using HAL_UART_Transmit
 
-	RCC ->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-	SystemClock_Config();
-	GPIO_Init();
-	EXTI_Init();
 
-	SysTick_Config(SystemCoreClock / 1000);
-	HAL_Init();
-	MX_GPIO_Init();
-	MX_USART2_UART_Init();
-	MX_TIM2_Init();
+
+		HAL_Init();
+	    SystemClock_Config();
+	    SysTick_Config(SystemCoreClock / 1000);
+	    GPIO_Init();
+	    EXTI_Init();
+	    MX_GPIO_Init();
+	    MX_USART2_UART_Init();
+	    MX_TIM2_Init();
+	    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
 
 
 
@@ -83,10 +87,12 @@ int main(void)
 	while (1)
 	{
 	    if (!adjustmentMode) {
-	        if (milliseconds >= 1000) {
+
+	    	if (milliseconds >= 1000) {
 	            milliseconds = 0;
 	            seconds++;
 	            if (seconds >= 60) {
+
 	                seconds = 0;
 	                minutes++;
 	                if (minutes >= 60) {
@@ -101,10 +107,8 @@ int main(void)
 	        }
 	    } else {
 	        // If in adjustment mode, keep track of elapsed time
-	        if (milliseconds >= 20000) {
+	    	if (milliseconds - adjustmentStart >= 20000) {
 	            adjustmentMode = 0;
-	            // Subtract the elapsed time during adjustment mode from the current milliseconds counter
-	            milliseconds -= elapsedMilliseconds;
 	            PrintClockValue(); // Call the PrintClockValue() function when exiting adjustment mode.
 	        }
 	    }
@@ -190,8 +194,7 @@ void EXTI2_IRQHandler(void) {
 
 void EnterAdjustmentMode(void) {
   adjustmentMode = 1;
-  elapsedMilliseconds = milliseconds;
-
+  adjustmentStart = milliseconds;
 }
 
 // Adjust the hour
@@ -351,6 +354,8 @@ static void MX_GPIO_Init(void)
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
+
+
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -361,6 +366,9 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
+
+
 
 #ifdef  USE_FULL_ASSERT
 /**
