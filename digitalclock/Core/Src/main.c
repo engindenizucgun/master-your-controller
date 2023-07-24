@@ -66,10 +66,6 @@ void SystemClock_Config(void)
 int main(void)
 {
 
-	// Send a simple string through UART using HAL_UART_Transmit
-
-
-
 		HAL_Init();
 	    SystemClock_Config();
 	    SysTick_Config(SystemCoreClock / 1000);
@@ -80,39 +76,34 @@ int main(void)
 	    MX_TIM2_Init();
 	    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
+	    // message
 
-
-
-
-	while (1)
-	{
-	    if (!adjustmentMode) {
-
-	    	if (milliseconds >= 1000) {
-	            milliseconds = 0;
-	            seconds++;
-	            if (seconds >= 60) {
-
-	                seconds = 0;
-	                minutes++;
-	                if (minutes >= 60) {
-	                    minutes = 0;
-	                    hours++;
-	                    if (hours >= 24) {
-	                        hours = 0;
+	    while (1) {
+	        if (!adjustmentMode) {
+	            if (milliseconds >= 1000) {
+	                milliseconds = 0;
+	                seconds++;
+	                if (seconds >= 60) {
+	                    seconds = 0;
+	                    minutes++;
+	                    if (minutes >= 60) {
+	                        minutes = 0;
+	                        hours++;
+	                        if (hours >= 24) {
+	                            hours = 0;
+	                        }
 	                    }
 	                }
+	                PrintClockValue(); // Call the PrintClockValue() function to print the clock value every second.
 	            }
-	            PrintClockValue(); // Call the PrintClockValue() function to print the clock value every second.
-	        }
-	    } else {
-	        // If in adjustment mode, keep track of elapsed time
-	    	if (milliseconds - adjustmentStart >= 20000) {
-	            adjustmentMode = 0;
-	            PrintClockValue(); // Call the PrintClockValue() function when exiting adjustment mode.
+	        } else {
+	            // If in adjustment mode, keep track of elapsed time
+	            if (milliseconds - adjustmentStart >= 20000) {
+	                adjustmentMode = 0;
+	                PrintClockValue(); // Call the PrintClockValue() function when exiting adjustment mode.
+	            }
 	        }
 	    }
-	}
 
   }
 
