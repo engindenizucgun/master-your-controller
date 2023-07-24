@@ -1,9 +1,8 @@
 #include "main.h"
 #include <stdbool.h>
-
+#include <stdio.h>
 
 TIM_HandleTypeDef htim2;
-
 UART_HandleTypeDef huart2;
 
 
@@ -13,6 +12,8 @@ volatile uint32_t minutes = 0;
 volatile uint32_t hours = 0;
 bool adjustmentMode = false;
 uint32_t adjustmentStart = 0;
+uint32_t buttonPressCount = 0;
+uint32_t buttonPressStart = 0;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -51,31 +52,6 @@ void EnterAdjustmentMode(void) {
   adjustmentStart = milliseconds;
 }
 
-void EXTI0_IRQHandler(void) {
-  if (EXTI->PR1 & EXTI_PR1_PIF0) {
-    EXTI->PR1 = EXTI_PR1_PIF0;
-    if (adjustmentMode == false) {
-      // Start adjustment mode if pressed for 2 seconds
-      uint32_t pressStart = milliseconds;
-      while ((GPIOC->IDR & GPIO_IDR_ID0) && ((milliseconds - pressStart) < 2000)) {
-        // Wait for button release or timeout
-      }
-      if (!(GPIOC->IDR & GPIO_IDR_ID0) && ((milliseconds - pressStart) >= 2000)) {
-        EnterAdjustmentMode();
-      }
-    } else {
-      // Exit adjustment mode if pressed for 2 seconds
-      uint32_t pressStart = milliseconds;
-      while ((GPIOC->IDR & GPIO_IDR_ID0) && ((milliseconds - pressStart) < 2000)) {
-        // Wait for button release or timeout
-      }
-      if (!(GPIOC->IDR & GPIO_IDR_ID0) && ((milliseconds - pressStart) >= 2000)) {
-        adjustmentMode = false;  // Exit adjustment mode
-        printf("%02lu:%02lu:%02lu\n", hours, minutes, seconds);
-      }
-    }
-  }
-}
 
 void AdjustHour(void) {
   if (hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
@@ -91,14 +67,12 @@ void AdjustHour(void) {
     }
 }
 
-// Adjust the minute
 void AdjustMinute(void) {
   if (minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
     minutes++;
   } else if (minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
 	  minutes--;
   }
-
     else if (minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
       minutes = 0;
     }
@@ -107,50 +81,70 @@ void AdjustMinute(void) {
     }
   }
 
-void EXTI1_IRQHandler(void) {
-  if (EXTI->PR1 & EXTI_PR1_PIF1) {
-    EXTI->PR1 = EXTI_PR1_PIF1;
-    if (adjustmentMode && (GPIOC->IDR & GPIO_IDR_ID1)) {
-      AdjustHour();
-    }
-  }
-}
 
-void EXTI2_IRQHandler(void) {
-  if (EXTI->PR1 & EXTI_PR1_PIF2) {
-    EXTI->PR1 = EXTI_PR1_PIF2;
-    if (adjustmentMode && (GPIOC->IDR & GPIO_IDR_ID2)) {
-      AdjustMinute();
-    }
-  }
-}
+void updateClock(TIM_HandleTypeDef *htim2) {
 
-
-
-
-
-
-uint32_t getCurrentTimeInSeconds(void) {
-    return (uint32_t)time(NULL);
-}
-
-void updateClock(void) {
+	htim2->Instance->ARR = 0;
+	milliseconds++;
     if (milliseconds >= 1000) {
+    	htim2->Instance->ARR = 1000 - 1;
         milliseconds = 0;
         seconds++;
         if (seconds >= 60) {
+        	htim2->Instance->ARR = 60000 - 1;
             seconds = 0;
             minutes++;
             if (minutes >= 60) {
+            	htim2->Instance->ARR = 3600000 - 1;
                 minutes = 0;
                 hours++;
                 if (hours >= 24) {
+                	htim2->Instance->ARR = 86400000 - 1;
                     hours = 0;
                 }
             }
         }
     }
 }
+
+void printClockValue(void) {
+    printf("%02lu:%02lu:%02lu\n", hours, minutes, seconds);
+}
+
+void EXTI0_IRQHandler(void) {
+    if (EXTI->PR1 & EXTI_PR1_PIF0) {
+        EXTI->PR1 = EXTI_PR1_PIF0;
+
+        // Button pressed, increase the press count and record start time if it's the first press
+        if (GPIOC->IDR & GPIO_IDR_ID0) {
+            buttonPressCount++;
+            if (buttonPressCount == 1) {
+                buttonPressStart = milliseconds;
+            }
+
+            // Button released, handle different cases based on press count and adjustment mode
+            if (buttonPressCount == 1 && !adjustmentMode) {
+                // Pressed once, start adjustment mode for hour
+                AdjustHour();
+                buttonPressCount++;
+            }  else if (buttonPressCount == 2 && adjustmentMode) {
+                // Pressed twice, start adjustment mode for minute
+                AdjustMinute();
+                buttonPressCount++;
+            }  else if (buttonPressCount == 3 && adjustmentMode) {
+                // Pressed once, exit adjustment mode and print adjusted clock
+            	printClockValue();
+            	buttonPressStart = 0;
+                buttonPressCount = 0;
+
+            }
+        }
+    }
+}
+
+
+
+
 
 void EXTI_Init(void) {
     // Configure EXTI for the set button (Falling edge trigger)
@@ -177,11 +171,13 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
   MX_USART2_UART_Init();
+  MX_GPIO_Init();
   MX_TIM2_Init();
 
   while (1)
   {
-
+	  HAL_Delay(100);
+	  printClockValue();
   }
 
 }
