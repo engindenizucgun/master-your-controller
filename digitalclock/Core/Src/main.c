@@ -68,7 +68,6 @@ int main(void)
 
 		HAL_Init();
 	    SystemClock_Config();
-	    SysTick_Config(SystemCoreClock / 1000);
 	    GPIO_Init();
 	    EXTI_Init();
 	    MX_GPIO_Init();
