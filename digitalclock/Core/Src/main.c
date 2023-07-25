@@ -1,10 +1,20 @@
+
+//------------------------------------------------------HEADER FILES---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
 #include "main.h"
 #include <stdbool.h>
 #include <stdio.h>
 
+//------------------------------------------------------HANDLEs---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
 TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
+
+//------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 volatile uint32_t milliseconds = 0;
 volatile uint32_t seconds = 0;
@@ -14,11 +24,25 @@ bool adjustmentMode = false;
 uint32_t adjustmentStart = 0;
 uint32_t buttonPressCount = 0;
 uint32_t buttonPressStart = 0;
+uint32_t clockValue = 0;
+
+
+//------------------------------------------------------FUNCTION PROTOTYPES--------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void EXTI0_IRQHandler(void);
+void EXTI1_IRQHandler(void);
+void EXTI2_IRQHandler(void);
+
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
+
+
+//------------------------------------------------------EXTI PINS INIT---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 void GPIO_Init(void) {
 
@@ -46,142 +70,8 @@ void GPIO_Init(void) {
     NVIC_EnableIRQ(EXTI1_IRQn);
     NVIC_EnableIRQ(EXTI2_IRQn);
 }
-
-void EnterAdjustmentMode(void) {
-  adjustmentMode = true;
-  adjustmentStart = milliseconds;
-}
-
-
-void AdjustHour(void) {
-  if (hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
-    hours++;
-  } else if (hours > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-    hours--;
-  }
-    else if (hours > 23 && GPIOC->IDR & GPIO_IDR_ID1) {
-      hours = 0;
-    }
-    else if (hours == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-    	hours = 23;
-    }
-}
-
-void AdjustMinute(void) {
-  if (minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
-    minutes++;
-  } else if (minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-	  minutes--;
-  }
-    else if (minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
-      minutes = 0;
-    }
-    else if (minutes == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-      minutes = 59;
-    }
-  }
-
-
-void updateClock(TIM_HandleTypeDef *htim2) {
-
-	htim2->Instance->ARR = 0;
-	milliseconds++;
-    if (milliseconds >= 1000) {
-    	htim2->Instance->ARR = 1000 - 1;
-        milliseconds = 0;
-        seconds++;
-        if (seconds >= 60) {
-        	htim2->Instance->ARR = 60000 - 1;
-            seconds = 0;
-            minutes++;
-            if (minutes >= 60) {
-            	htim2->Instance->ARR = 3600000 - 1;
-                minutes = 0;
-                hours++;
-                if (hours >= 24) {
-                	htim2->Instance->ARR = 86400000 - 1;
-                    hours = 0;
-                }
-            }
-        }
-    }
-}
-
-void printClockValue(void) {
-    printf("%02lu:%02lu:%02lu\n", hours, minutes, seconds);
-}
-
-void EXTI0_IRQHandler(void) {
-    if (EXTI->PR1 & EXTI_PR1_PIF0) {
-        EXTI->PR1 = EXTI_PR1_PIF0;
-
-        // Button pressed, increase the press count and record start time if it's the first press
-        if (GPIOC->IDR & GPIO_IDR_ID0) {
-            buttonPressCount++;
-            if (buttonPressCount == 1) {
-                buttonPressStart = milliseconds;
-            }
-
-            // Button released, handle different cases based on press count and adjustment mode
-            if (buttonPressCount == 1 && !adjustmentMode) {
-                // Pressed once, start adjustment mode for hour
-                AdjustHour();
-                buttonPressCount++;
-            }  else if (buttonPressCount == 2 && adjustmentMode) {
-                // Pressed twice, start adjustment mode for minute
-                AdjustMinute();
-                buttonPressCount++;
-            }  else if (buttonPressCount == 3 && adjustmentMode) {
-                // Pressed once, exit adjustment mode and print adjusted clock
-            	printClockValue();
-            	buttonPressStart = 0;
-                buttonPressCount = 0;
-
-            }
-        }
-    }
-}
-
-
-
-
-
-void EXTI_Init(void) {
-    // Configure EXTI for the set button (Falling edge trigger)
-    EXTI->IMR1 |= EXTI_IMR1_IM0;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT0; // Enable falling edge trigger
-
-    // Configure EXTI for the increase button (Falling edge trigger)
-    EXTI->IMR1 |= EXTI_IMR1_IM1;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT1; // Enable falling edge trigger
-
-    // Configure EXTI for the decrease button (Falling edge trigger)
-    EXTI->IMR1 |= EXTI_IMR1_IM2;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT2; // Enable falling edge trigger
-
-    // Enable EXTI interrupt in NVIC
-    NVIC_EnableIRQ(EXTI0_IRQn);
-    NVIC_EnableIRQ(EXTI1_IRQn);
-    NVIC_EnableIRQ(EXTI2_IRQn);
-  }
-
-int main(void)
-{
-
-  HAL_Init();
-  SystemClock_Config();
-  MX_USART2_UART_Init();
-  MX_GPIO_Init();
-  MX_TIM2_Init();
-
-  while (1)
-  {
-	  HAL_Delay(100);
-	  printClockValue();
-  }
-
-}
-
+//------------------------------------------------------CLOCK---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 void SystemClock_Config(void)
 {
@@ -217,12 +107,163 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
+//------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+
+bool isButtonPressed(uint32_t GPIO_Pin) {
+    return (GPIOC->IDR & GPIO_Pin) == 0;
+}
+
+//------------------------------------------------------GET CURRENT TIME---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+uint32_t getCurrentTimeInSeconds(void) {
+    uint32_t currentCounterValue = __HAL_TIM_GET_COUNTER(&htim2);
+    uint32_t timeInSeconds = currentCounterValue / 1000;
+    return timeInSeconds;
+}
+
+//------------------------------------------------------SECONDS TO MINUTES TO HOURS---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void updateClock(uint32_t seconds, uint32_t *hours, uint32_t *minutes, uint32_t *secs) {
+    *hours = seconds / 3600;
+    seconds %= 3600;
+    *minutes = seconds / 60;
+    *secs = seconds % 60;
+}
+//------------------------------------------------------ADJUSTMENT MODE---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void EnterAdjustmentMode(void) {
+  adjustmentMode = true;
+  adjustmentStart = milliseconds;
+}
+
+//------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void AdjustHour(void) {
+  if (hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
+    hours++;
+  } else if (hours > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+    hours--;
+  }
+    else if (hours > 23 && GPIOC->IDR & GPIO_IDR_ID1) {
+      hours = 0;
+    }
+    else if (hours == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+    	hours = 23;
+    }
+
+}
+
+void AdjustMinute(void) {
+  if (minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
+    minutes++;
+  } else if (minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+	  minutes--;
+  }
+    else if (minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
+      minutes = 0;
+    }
+    else if (minutes == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+      minutes = 59;
+    }
+
+  }
+
+//------------------------------------------------------PRINT CLOCK---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void printClockValue(void) {
+    printf("%02lu:%02lu:%02lu\n", hours, minutes, seconds);
+}
+
+//------------------------------------------------------EXTI HANDLERS---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+void EXTI0_IRQHandler(void) {
+    if (EXTI->PR1 & EXTI_PR1_PIF0) {
+        EXTI->PR1 = EXTI_PR1_PIF0;
+        // Handle the button press on EXTI line 0
+    }
+}
+
+void EXTI1_IRQHandler(void) {
+    if (EXTI->PR1 & EXTI_PR1_PIF1) {
+        EXTI->PR1 = EXTI_PR1_PIF1;
+        // Handle the button press on EXTI line 1
+    }
+}
+
+void EXTI2_IRQHandler(void) {
+    if (EXTI->PR1 & EXTI_PR1_PIF2) {
+        EXTI->PR1 = EXTI_PR1_PIF2;
+        // Handle the button press on EXTI line 2
+    }
+}
+
+
+
+//------------------------------------------------------MAIN FUNCTION---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+int main(void)
+{
+
+  HAL_Init();
+  SystemClock_Config();
+  MX_USART2_UART_Init();
+  MX_GPIO_Init();
+  MX_TIM2_Init();
+
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
+  GPIOC->MODER &= ~(GPIO_MODER_MODE0_Msk | GPIO_MODER_MODE1_Msk | GPIO_MODER_MODE2_Msk);
+
+  while (1)
+  {
+	  if (GPIOC->IDR & GPIO_IDR_ID0) {
+	              buttonPressCount++;
+	              if (buttonPressCount == 1) {
+	                  buttonPressStart = milliseconds;
+	              }
+
+	              // Button released, handle different cases based on press count and adjustment mode
+	              if (buttonPressCount == 1 && !adjustmentMode) {
+	                  // Pressed once, start adjustment mode for hour
+	              	adjustmentMode = true;
+	                  AdjustHour();
+	                  buttonPressCount++;
+	              }  else if (buttonPressCount == 2 && adjustmentMode) {
+	                  // Pressed twice, start adjustment mode for minute
+	                  AdjustMinute();
+	                  buttonPressCount++;
+	              }  else if (buttonPressCount == 3 && adjustmentMode) {
+	                  // Pressed once, exit adjustment mode and print adjusted clock
+	              	printClockValue();
+	              	adjustmentMode = false;
+	              	buttonPressStart = 0;
+	                buttonPressCount = 0;
+
+	              }
+	          }
+	}
+}
+
+
+
+//------------------------------------------------------COMPUTER GENERATED PART---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+
+
+
 
 
 static void MX_TIM2_Init(void)
 {
-
-
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
