@@ -1,0 +1,80 @@
+2023-07-24 13:40:10,893 [INFO] Gpio:273 - dependency for GPIO [RCC, SYS, USART2]
+2023-07-24 13:41:16,508 [INFO] Gpio:273 - dependency for GPIO [RCC, SYS, USART2]
+2023-07-24 13:41:16,538 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-07-24 13:41:20,229 [INFO] Gpio:273 - dependency for GPIO [RCC, SYS, USART2]
+2023-07-24 13:41:20,261 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-07-24 13:41:23,732 [INFO] Gpio:273 - dependency for GPIO [RCC, SYS, USART2]
+2023-07-24 13:41:23,767 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-07-24 13:44:13,384 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 854965344 Bytes (1073741824)
+2023-07-24 13:44:17,672 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 726219168 Bytes (1073741824)
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8L4
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-07-24 13:44:17,991 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-07-24 13:44:17,991 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.1.202304191431\\db\
+2023-07-24 13:44:18,238 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp_save
+2023-07-24 13:44:18,331 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp
+2023-07-24 13:44:18,519 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp_save
+2023-07-24 13:44:18,628 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp
+2023-07-24 13:44:18,831 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c_save
+2023-07-24 13:44:19,159 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c
+2023-07-24 13:44:19,175 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h_save
+2023-07-24 13:44:19,253 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h
+2023-07-24 13:44:19,284 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c_save
+2023-07-24 13:44:19,378 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c
+2023-07-24 13:44:19,394 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp_save
+2023-07-24 13:44:19,456 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp
+2023-07-24 13:44:19,487 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h_save
+2023-07-24 13:44:19,581 [INFO] CodeEngine:335 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h
+2023-07-24 13:44:19,612 [WARN] IPConfigManager:3431 - IP not found : TIM
+2023-07-24 13:44:19,612 [WARN] CodeGenerator:3754 - IP not found : null
+2023-07-24 13:44:19,644 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h_save
+2023-07-24 13:44:19,753 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h
+2023-07-24 13:44:19,769 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c_save
+2023-07-24 13:44:19,997 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c
+2023-07-24 13:44:20,784 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 217mS.
+2023-07-24 13:44:20,784 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-07-24 13:44:21,199 [INFO] ConfigFileManager:1483 - The Die is : DIE435
+2023-07-24 13:44:21,199 [INFO] ApiDbMcu:507 - Load IP Config File for FATFS
+2023-07-24 13:44:21,215 [INFO] ApiDbMcu:507 - Load IP Config File for FREERTOS
+2023-07-24 13:44:21,231 [INFO] ApiDbMcu:507 - Load IP Config File for TOUCHSENSING
+2023-07-24 13:44:21,246 [INFO] ApiDbMcu:507 - Load IP Config File for USB_DEVICE
+2023-07-24 13:44:22,857 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 2073mS.
+2023-07-24 13:44:22,857 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.
+2023-07-24 13:44:22,857 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.
+2023-07-24 15:15:45,549 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 730856712 Bytes (1073741824)
+2023-07-24 15:15:45,902 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-07-24 15:15:45,902 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-07-24 15:15:45,902 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8L4
+2023-07-24 15:15:45,902 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-07-24 15:15:45,903 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-07-24 15:15:45,903 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-07-24 15:15:45,904 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.1.202304191431\\db\
+2023-07-24 15:15:46,094 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp_save
+2023-07-24 15:15:46,227 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\license.tmp
+2023-07-24 15:15:46,269 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp_save
+2023-07-24 15:15:46,361 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\gpio.tmp
+2023-07-24 15:15:46,615 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c_save
+2023-07-24 15:15:46,786 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_it.c
+2023-07-24 15:15:46,791 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h_save
+2023-07-24 15:15:46,881 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_it.h
+2023-07-24 15:15:46,909 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c_save
+2023-07-24 15:15:47,059 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\stm32l4xx_hal_msp.c
+2023-07-24 15:15:47,063 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp_save
+2023-07-24 15:15:47,114 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\MXTmpFiles\system.tmp
+2023-07-24 15:15:47,133 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h_save
+2023-07-24 15:15:47,229 [INFO] CodeEngine:335 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\stm32l4xx_hal_conf.h
+2023-07-24 15:15:47,249 [WARN] IPConfigManager:3431 - IP not found : TIM
+2023-07-24 15:15:47,250 [WARN] CodeGenerator:3754 - IP not found : null
+2023-07-24 15:15:47,267 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h_save
+2023-07-24 15:15:47,420 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Inc\main.h
+2023-07-24 15:15:47,435 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c_save
+2023-07-24 15:15:47,563 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\Core\Src\main.c
+2023-07-24 15:15:48,252 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 225mS.
+2023-07-24 15:15:48,255 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-07-24 15:15:48,655 [INFO] ConfigFileManager:1483 - The Die is : DIE435
+2023-07-24 15:15:50,162 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 1908mS.
+2023-07-24 15:15:50,163 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 1mS.
+2023-07-24 15:15:50,166 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.

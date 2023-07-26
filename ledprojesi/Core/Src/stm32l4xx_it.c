@@ -182,14 +182,28 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* USER CODE BEGIN SysTick_IRQn 0 */
+    HAL_IncTick(); // Increment HAL's internal tick counter
+    milliseconds++;
 
-  /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
-  /* USER CODE BEGIN SysTick_IRQn 1 */
+    if (adjustmentMode)
+    {
+        // If in adjustment mode, check if 20 seconds have elapsed to exit adjustment mode
+        if ((milliseconds - adjustmentStart) >= 20000)
+        {
+            adjustmentMode = false;
+            buttonPressCount = 0;
+        }
+    }
 
-  /* USER CODE END SysTick_IRQn 1 */
+    // Update the time variables (seconds, minutes, hours) only if not in adjustment mode
+    if (!adjustmentMode)
+    {
+        seconds = getCurrentTimeInSeconds();
+        updateClock(seconds, &hours, &minutes, &seconds);
+
+    }
 }
+
 
 /******************************************************************************/
 /* STM32L4xx Peripheral Interrupt Handlers                                    */

@@ -1,10 +1,10 @@
-
 //------------------------------------------------------HEADER FILES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 #include "main.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 //------------------------------------------------------HANDLEs---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
@@ -16,10 +16,10 @@ UART_HandleTypeDef huart2;
 //------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-volatile uint32_t milliseconds = 0;
-volatile uint32_t seconds = 0;
-volatile uint32_t minutes = 0;
-volatile uint32_t hours = 0;
+uint32_t milliseconds = 0;
+uint32_t seconds = 0;
+uint32_t minutes = 0; // Change this to uint32_t
+uint32_t hours = 0;   // Change this to uint32_t
 bool adjustmentMode = false;
 uint32_t adjustmentStart = 0;
 uint32_t buttonPressCount = 0;
@@ -27,13 +27,16 @@ uint32_t buttonPressStart = 0;
 uint32_t clockValue = 0;
 
 
+
 //------------------------------------------------------FUNCTION PROTOTYPES--------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void EXTI0_IRQHandler(void);
-void EXTI1_IRQHandler(void);
-void EXTI2_IRQHandler(void);
+//void EXTI0_IRQHandler(void);
+//void EXTI1_IRQHandler(void);
+//void EXTI2_IRQHandler(void);
 
+void AdjustHour(uint32_t *hours);
+void AdjustMinute(uint32_t *minutes);
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -124,15 +127,7 @@ uint32_t getCurrentTimeInSeconds(void) {
     return timeInSeconds;
 }
 
-//------------------------------------------------------SECONDS TO MINUTES TO HOURS---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void updateClock(uint32_t seconds, uint32_t *hours, uint32_t *minutes, uint32_t *secs) {
-    *hours = seconds / 3600;
-    seconds %= 3600;
-    *minutes = seconds / 60;
-    *secs = seconds % 60;
-}
 //------------------------------------------------------ADJUSTMENT MODE---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
@@ -144,68 +139,71 @@ void EnterAdjustmentMode(void) {
 //------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void AdjustHour(void) {
-  if (hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
-    hours++;
-  } else if (hours > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-    hours--;
+void AdjustHour(uint32_t *hours) {
+  if (*hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
+	 (*hours)++;
+  } else if (*hours > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+     (*hours)--;
   }
-    else if (hours > 23 && GPIOC->IDR & GPIO_IDR_ID1) {
-      hours = 0;
+    else if (*hours == 23 && GPIOC->IDR & GPIO_IDR_ID1) {
+      *hours = 0;
     }
     else if (hours == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-    	hours = 23;
+      *hours = 23;
     }
-
 }
 
-void AdjustMinute(void) {
-  if (minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
-    minutes++;
-  } else if (minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-	  minutes--;
+void AdjustMinute(uint32_t *minutes) {
+  if (*minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
+    (*minutes)++;
+  } else if (*minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+	  (*minutes)--;
   }
-    else if (minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
-      minutes = 0;
+    else if (*minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
+      *minutes = 0;
     }
-    else if (minutes == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-      minutes = 59;
+    else if (*minutes == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
+      *minutes = 59;
     }
-
   }
 
-//------------------------------------------------------PRINT CLOCK---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
-void printClockValue(void) {
-    printf("%02lu:%02lu:%02lu\n", hours, minutes, seconds);
-}
 
 //------------------------------------------------------EXTI HANDLERS---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
+// EXTI line 0 interrupt handler for the "SET" button
 void EXTI0_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF0) {
         EXTI->PR1 = EXTI_PR1_PIF0;
-        // Handle the button press on EXTI line 0
+        // Enter the adjustment mode when the "SET" button is pressed
+        EnterAdjustmentMode();
     }
 }
 
+// EXTI line 1 interrupt handler for the "INCREASE" button
 void EXTI1_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF1) {
         EXTI->PR1 = EXTI_PR1_PIF1;
-        // Handle the button press on EXTI line 1
+        // Adjust the hour when the "INCREASE" button is pressed in the adjustment mode
+        if (adjustmentMode) {
+            AdjustHour(&hours);
+        }
     }
 }
 
+// EXTI line 2 interrupt handler for the "DECREASE" button
 void EXTI2_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF2) {
         EXTI->PR1 = EXTI_PR1_PIF2;
-        // Handle the button press on EXTI line 2
+        // Adjust the minute when the "DECREASE" button is pressed in the adjustment mode
+        if (adjustmentMode) {
+            AdjustMinute(&minutes);
+        }
     }
 }
 
 
+////kullanmiyosun
 
 //------------------------------------------------------MAIN FUNCTION---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
@@ -224,7 +222,27 @@ int main(void)
 
   while (1)
   {
+	  int currentValue = HAL_GetTick();
+
+	 	    if (currentValue - milliseconds >= 1000) {
+	 		  	  	  	  milliseconds = currentValue;
+	 	 	              uint32_t seconds = currentValue / 1000;
+	 	 	              uint32_t minutes = seconds / 60;
+	 	 	              uint32_t hours = minutes / 60;
+	 	 	              seconds %= 60;
+	 	 	              minutes %= 60;
+	 	 	              hours %= 24;
+
+
+
+
+	 	 	              char buffer[50];
+	 	 	              sprintf(buffer, "Clock Time: %02lu:%02lu:%02lu\r\n", hours, minutes,seconds);
+	 	 	              HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	 	 	          }
+
 	  if (GPIOC->IDR & GPIO_IDR_ID0) {
+		  	  	  int time2 = HAL_GetTick();
 	              buttonPressCount++;
 	              if (buttonPressCount == 1) {
 	                  buttonPressStart = milliseconds;
@@ -234,45 +252,57 @@ int main(void)
 	              if (buttonPressCount == 1 && !adjustmentMode) {
 	                  // Pressed once, start adjustment mode for hour
 	              	adjustmentMode = true;
-	                  AdjustHour();
+	              	  EXTI1_IRQHandler();
 	                  buttonPressCount++;
 	              }  else if (buttonPressCount == 2 && adjustmentMode) {
 	                  // Pressed twice, start adjustment mode for minute
-	                  AdjustMinute();
+	            	  EXTI2_IRQHandler();
 	                  buttonPressCount++;
 	              }  else if (buttonPressCount == 3 && adjustmentMode) {
 	                  // Pressed once, exit adjustment mode and print adjusted clock
-	              	printClockValue();
+	              	//printClockValue();
 	              	adjustmentMode = false;
 	              	buttonPressStart = 0;
 	                buttonPressCount = 0;
 
 	              }
+
+//	              // no action
+//	              if (time2 - milliseconds >= 20000) {
+//	            	  milliseconds = time2;
+//	            	  break;
+	              }
+
 	          }
+
+
+
+	  // print
 	}
-}
 
 
-
-//------------------------------------------------------COMPUTER GENERATED PART---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
-
-
-
-
-
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_TIM2_Init(void)
 {
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
+  /* USER CODE BEGIN TIM2_Init 1 */
 
+  /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 42015;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 16000;
+  htim2.Init.Period = 1000-1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -290,15 +320,27 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  /* USER CODE BEGIN TIM2_Init 2 */
 
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
-
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_USART2_UART_Init(void)
 {
 
+  /* USER CODE BEGIN USART2_Init 0 */
 
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -313,65 +355,97 @@ static void MX_USART2_UART_Init(void)
   {
     Error_Handler();
   }
+  /* USER CODE BEGIN USART2_Init 2 */
 
+  /* USER CODE END USART2_Init 2 */
 
 }
 
-
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
+  /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SMPS_EN_Pin|SMPS_V1_Pin|SMPS_SW_Pin, GPIO_PIN_RESET);
 
-
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
 
-
+  /*Configure GPIO pins : B1_Pin SET_Pin INCREASE_Pin DECREASE_Pin */
   GPIO_InitStruct.Pin = B1_Pin|SET_Pin|INCREASE_Pin|DECREASE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-
+  /*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin SMPS_SW_Pin */
   GPIO_InitStruct.Pin = SMPS_EN_Pin|SMPS_V1_Pin|SMPS_SW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-
+  /*Configure GPIO pin : SMPS_PG_Pin */
   GPIO_InitStruct.Pin = SMPS_PG_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(SMPS_PG_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : LD4_Pin */
   GPIO_InitStruct.Pin = LD4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD4_GPIO_Port, &GPIO_InitStruct);
- }
 
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
+}
 
+/* USER CODE BEGIN 4 */
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
 void Error_Handler(void)
 {
-
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-
-
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
-
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
 }
-#endif
+#endif /* USE_FULL_ASSERT */

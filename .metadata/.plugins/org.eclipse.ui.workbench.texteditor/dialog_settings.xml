@@ -6,8 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="LD4"/>
+		<item key="selection" value="SysTick"/>
 		<list key="findhistory">
+			<item value="SysTick"/>
+			<item value="handleAdjustment"/>
+			<item value="INCREASE"/>
+			<item value="INCREASE_Pin"/>
+			<item value="UART_MODE_TX_RX"/>
 			<item value="LD4"/>
 			<item value="GPIOA"/>
 			<item value="SystemClock"/>
