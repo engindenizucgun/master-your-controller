@@ -1,0 +1,8 @@
+main.c:65:6:HAL_GPIO_EXTI_Callback	3
+main.c:103:5:main	5
+main.c:163:6:SystemClock_Config	4
+main.c:207:13:MX_TIM2_Init	4
+main.c:252:13:MX_USART2_UART_Init	2
+main.c:287:13:MX_GPIO_Init	1
+main.c:336:6:EXTI0_IRQHandler	1
+main.c:349:6:Error_Handler	1

@@ -1,77 +1,70 @@
-14:49:28 **** Incremental Build of configuration Debug for project button_debug ****
+13:01:58 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "button_debug.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\button_debug\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="button_debug.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: button_debug.elf
+arm-none-eabi-gcc -o "test_project.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\test_project\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: test_project.elf
  
-arm-none-eabi-size   button_debug.elf 
-arm-none-eabi-objdump -h -S  button_debug.elf  > "button_debug.list"
+arm-none-eabi-size   test_project.elf 
+arm-none-eabi-objdump -h -S  test_project.elf  > "test_project.list"
    text	   data	    bss	    dec	    hex	filename
-  14152	     20	   1780	  15952	   3e50	button_debug.elf
+  14076	     20	   1780	  15876	   3e04	test_project.elf
 Finished building: default.size.stdout
  
-Finished building: button_debug.list
+Finished building: test_project.list
  
-15:47:12 **** Incremental Build of configuration Debug for project button_debug ****
+13:02:01 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
-arm-none-eabi-size   button_debug.elf 
+arm-none-eabi-size   test_project.elf 
    text	   data	    bss	    dec	    hex	filename
-  14152	     20	   1780	  15952	   3e50	button_debug.elf
+  14076	     20	   1780	  15876	   3e04	test_project.elf
 Finished building: default.size.stdout
  
-15:47:42 **** Incremental Build of configuration Debug for project button_debug ****
+13:03:19 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
-arm-none-eabi-size   button_debug.elf 
+arm-none-eabi-size   test_project.elf 
    text	   data	    bss	    dec	    hex	filename
-  14152	     20	   1780	  15952	   3e50	button_debug.elf
+  14076	     20	   1780	  15876	   3e04	test_project.elf
 Finished building: default.size.stdout
  
-15:48:01 **** Incremental Build of configuration Debug for project button_debug ****
-make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "button_debug.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\button_debug\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="button_debug.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: button_debug.elf
- 
-arm-none-eabi-size   button_debug.elf 
-arm-none-eabi-objdump -h -S  button_debug.elf  > "button_debug.list"
-   text	   data	    bss	    dec	    hex	filename
-  14152	     20	   1780	  15952	   3e50	button_debug.elf
-Finished building: default.size.stdout
- 
-Finished building: button_debug.list
- 
-15:48:38 **** Incremental Build of configuration Debug for project button_debug ****
+13:09:09 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "button_debug.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\button_debug\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="button_debug.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: button_debug.elf
+arm-none-eabi-gcc -o "test_project.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\test_project\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: test_project.elf
  
-arm-none-eabi-size   button_debug.elf 
-arm-none-eabi-objdump -h -S  button_debug.elf  > "button_debug.list"
+arm-none-eabi-size   test_project.elf 
+arm-none-eabi-objdump -h -S  test_project.elf  > "test_project.list"
    text	   data	    bss	    dec	    hex	filename
-  14140	     20	   1780	  15940	   3e44	button_debug.elf
+  14268	     20	   1788	  16076	   3ecc	test_project.elf
 Finished building: default.size.stdout
  
-Finished building: button_debug.list
+Finished building: test_project.list
  
-15:49:10 **** Incremental Build of configuration Debug for project button_debug ****
+13:09:52 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "button_debug.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\button_debug\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="button_debug.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: button_debug.elf
+arm-none-eabi-gcc -o "test_project.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\test_project\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: test_project.elf
  
-arm-none-eabi-size   button_debug.elf 
-arm-none-eabi-objdump -h -S  button_debug.elf  > "button_debug.list"
+arm-none-eabi-size   test_project.elf 
+arm-none-eabi-objdump -h -S  test_project.elf  > "test_project.list"
    text	   data	    bss	    dec	    hex	filename
-  14124	     20	   1780	  15924	   3e34	button_debug.elf
+  14348	     20	   1788	  16156	   3f1c	test_project.elf
 Finished building: default.size.stdout
  
-Finished building: button_debug.list
+Finished building: test_project.list
  
-15:53:45 **** Incremental Build of configuration Debug for project button_debug ****
+13:10:20 **** Incremental Build of configuration Debug for project test_project ****
 make -j8 all 
-arm-none-eabi-size   button_debug.elf 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "test_project.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\test_project\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: test_project.elf
+ 
+arm-none-eabi-size   test_project.elf 
+arm-none-eabi-objdump -h -S  test_project.elf  > "test_project.list"
    text	   data	    bss	    dec	    hex	filename
-  14124	     20	   1780	  15924	   3e34	button_debug.elf
+  14348	     20	   1788	  16156	   3f1c	test_project.elf
 Finished building: default.size.stdout
+ 
+Finished building: test_project.list
  
