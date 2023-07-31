@@ -1,4 +1,4 @@
-14:34:59 **** Incremental Build of configuration Debug for project digitalclock ****
+16:10:42 **** Incremental Build of configuration Debug for project digitalclock ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 arm-none-eabi-gcc -o "digitalclock.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="digitalclock.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -7,15 +7,57 @@ Finished building target: digitalclock.elf
 arm-none-eabi-size   digitalclock.elf 
 arm-none-eabi-objdump -h -S  digitalclock.elf  > "digitalclock.list"
    text	   data	    bss	    dec	    hex	filename
-  17368	    120	   1824	  19312	   4b70	digitalclock.elf
+  17372	    120	   1824	  19316	   4b74	digitalclock.elf
 Finished building: default.size.stdout
  
 Finished building: digitalclock.list
  
-14:35:31 **** Incremental Build of configuration Debug for project digitalclock ****
+16:11:12 **** Incremental Build of configuration Debug for project digitalclock ****
 make -j8 all 
 arm-none-eabi-size   digitalclock.elf 
    text	   data	    bss	    dec	    hex	filename
-  17368	    120	   1824	  19312	   4b70	digitalclock.elf
+  17372	    120	   1824	  19316	   4b74	digitalclock.elf
 Finished building: default.size.stdout
+ 
+16:12:35 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "digitalclock.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="digitalclock.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: digitalclock.elf
+ 
+arm-none-eabi-size   digitalclock.elf 
+arm-none-eabi-objdump -h -S  digitalclock.elf  > "digitalclock.list"
+   text	   data	    bss	    dec	    hex	filename
+  17356	    120	   1824	  19300	   4b64	digitalclock.elf
+Finished building: default.size.stdout
+ 
+Finished building: digitalclock.list
+ 
+16:14:22 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "digitalclock.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="digitalclock.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: digitalclock.elf
+ 
+arm-none-eabi-size   digitalclock.elf 
+arm-none-eabi-objdump -h -S  digitalclock.elf  > "digitalclock.list"
+   text	   data	    bss	    dec	    hex	filename
+  17200	    120	   1824	  19144	   4ac8	digitalclock.elf
+Finished building: default.size.stdout
+ 
+Finished building: digitalclock.list
+ 
+16:16:12 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "digitalclock.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\digitalclock\STM32L433RCTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="digitalclock.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: digitalclock.elf
+ 
+arm-none-eabi-size   digitalclock.elf 
+arm-none-eabi-objdump -h -S  digitalclock.elf  > "digitalclock.list"
+   text	   data	    bss	    dec	    hex	filename
+  17356	    120	   1824	  19300	   4b64	digitalclock.elf
+Finished building: default.size.stdout
+ 
+Finished building: digitalclock.list
  

@@ -119,68 +119,33 @@ int buttonclick = 0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+    adjustmentStart = HAL_GetTick();
 
-	adjustmentStart = HAL_GetTick();
+    // adjust hour
+    if (GPIO_Pin == GPIO_PIN_14)
+    {
+        buttonclick++;
 
-	//adjust hour
-	if (  GPIO_Pin == GPIO_PIN_14) {
-		buttonclick++;
+        adjustmentMode = true;
 
+        if (buttonclick == 1)
+        {
+            AdjustHour(&hours, GPIO_Pin);
+        }
 
-	    adjustmentMode = true;
+        if (buttonclick == 2)
+        {
+            AdjustMinute(&minutes, GPIO_Pin);
+        }
 
-		while(buttonclick == 1) {
-			AdjustHour(&hours, GPIO_Pin);
-			if (  GPIO_Pin == GPIO_PIN_14) {
-				buttonclick++;
-			}
-			buttonclick = 0;
-
-
-		}
-
-
-
-
-
-		if (adjustmentStart - milliseconds > 20000) {
-			milliseconds = adjustmentStart;
-			adjustmentMode = false;
-			buttonclick = 0;
-
-
-		}
-	}
-
-
-
-
-	if (buttonclick == 2 && GPIO_Pin == GPIO_PIN_14) {
-		while(buttonclick == 2) {
-			AdjustMinute(&minutes, GPIO_Pin);
-			if (  GPIO_Pin == GPIO_PIN_14) {
-				buttonclick++;
-			}
-			buttonclick = 0;
-
-
-		}
-
-		if (adjustmentStart - milliseconds > 20000) {
-			milliseconds = adjustmentStart;
-			adjustmentMode = false;
-			buttonclick = 0;
-
-
-
-		}
-	}
-	if (buttonclick == 3 && GPIO_Pin == GPIO_PIN_14) {
-		adjustmentMode = false;
-		buttonclick = 0;
-	}
-
+        if (buttonclick >= 3)
+        {
+            buttonclick = 0;
+            adjustmentMode = false;
+        }
+    }
 }
+
 
 //------------------------------------------------------MAIN FUNCTION---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//

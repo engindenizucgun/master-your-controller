@@ -202,23 +202,12 @@ int main(void)
 	{
 		int currentValue = HAL_GetTick();
 
-				if (currentValue - milliseconds >= 1000) {
-					milliseconds = currentValue;
-					seconds++;
+		if (currentValue - milliseconds >= 1000) {
+			milliseconds = currentValue;
+			seconds %= 60;
+			minutes %= 60;
+			hours %= 24;
 
-					if (seconds >= 60) {
-						seconds = 0;
-						minutes++;
-
-						if (minutes >= 60) {
-							minutes = 0;
-							hours++;
-
-							if (hours >= 24) {
-								hours = 0;
-							}
-						}
-					}
 
 
 
