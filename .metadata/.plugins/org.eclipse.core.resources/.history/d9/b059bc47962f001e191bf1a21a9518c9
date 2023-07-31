@@ -131,7 +131,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	    adjustmentMode = true;
 
 		while(buttonclick == 1) {
-			AdjustHour(&hours, GPIO_Pin);
+			AdjustHour(&hours, &GPIO_Pin);
 			if (  GPIO_Pin == GPIO_PIN_14) {
 				buttonclick++;
 			}
@@ -156,7 +156,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (buttonclick == 2 && GPIO_Pin == GPIO_PIN_14) {
 		while(buttonclick == 2) {
-			AdjustMinute(&minutes, GPIO_Pin);
+			AdjustMinute(&minutes, &GPIO_Pin);
 			if (  GPIO_Pin == GPIO_PIN_14) {
 				buttonclick++;
 			}

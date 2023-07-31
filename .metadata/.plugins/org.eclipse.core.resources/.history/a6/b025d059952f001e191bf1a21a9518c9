@@ -35,8 +35,8 @@ uint32_t clockValue = 0;
 //void EXTI1_IRQHandler(void);
 //void EXTI2_IRQHandler(void);
 
-void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin);
-void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin);
+void AdjustHour(uint32_t *hours);
+void AdjustMinute(uint32_t *minutes);
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -86,7 +86,7 @@ void SystemClock_Config(void)
 //------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
+uint32_t AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 	if (*hours >= 0 && GPIO_Pin == GPIO_PIN_7) {
 		(*hours)++;
 	} else if (*hours > 0 && GPIO_Pin == GPIO_PIN_8) {
@@ -96,9 +96,10 @@ void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 	} else if (*hours == 0 && GPIO_Pin == GPIO_PIN_8) {
 		*hours = 23;
 	}
+	return *hours; // Return the updated value of hours
 }
 
-void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
+uint32_t AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 	if (*minutes >= 0 && GPIO_Pin == GPIO_PIN_7) {
 		(*minutes)++;
 	} else if (*minutes > 0 && GPIO_Pin == GPIO_PIN_8) {
@@ -108,6 +109,7 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 	} else if (*minutes == 0 && GPIO_Pin == GPIO_PIN_8) {
 		*minutes = 59;
 	}
+	return *minutes; // Return the updated value of minutes
 }
 
 
@@ -131,7 +133,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	    adjustmentMode = true;
 
 		while(buttonclick == 1) {
-			AdjustHour(&hours, GPIO_Pin);
+			AdjustHour(&hours);
 			if (  GPIO_Pin == GPIO_PIN_14) {
 				buttonclick++;
 			}
@@ -156,7 +158,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (buttonclick == 2 && GPIO_Pin == GPIO_PIN_14) {
 		while(buttonclick == 2) {
-			AdjustMinute(&minutes, GPIO_Pin);
+			AdjustMinute(&minutes);
 			if (  GPIO_Pin == GPIO_PIN_14) {
 				buttonclick++;
 			}

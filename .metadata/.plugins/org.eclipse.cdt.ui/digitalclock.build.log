@@ -1,36 +1,10 @@
-10:47:49 **** Incremental Build of configuration Debug for project digitalclock ****
+14:35:31 **** Incremental Build of configuration Debug for project digitalclock ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c:89:10: error: conflicting types for 'AdjustHour'
-   89 | uint32_t AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
-      |          ^~~~~~~~~~
-../Core/Src/main.c:38:6: note: previous declaration of 'AdjustHour' was here
-   38 | void AdjustHour(uint32_t *hours);
-      |      ^~~~~~~~~~
-../Core/Src/main.c:102:10: error: conflicting types for 'AdjustMinute'
-  102 | uint32_t AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
-      |          ^~~~~~~~~~~~
-../Core/Src/main.c:39:6: note: previous declaration of 'AdjustMinute' was here
-   39 | void AdjustMinute(uint32_t *minutes);
-      |      ^~~~~~~~~~~~
-../Core/Src/main.c: In function 'HAL_GPIO_EXTI_Callback':
-../Core/Src/main.c:134:7: error: too few arguments to function 'AdjustHour'
-  134 |       AdjustHour();
-      |       ^~~~~~~~~~
-../Core/Src/main.c:89:10: note: declared here
-   89 | uint32_t AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
-      |          ^~~~~~~~~~
-../Core/Src/main.c:131:12: warning: variable 'adjustmentMode' set but not used [-Wunused-but-set-variable]
-  131 |       bool adjustmentMode = true;
-      |            ^~~~~~~~~~~~~~
-../Core/Src/main.c:147:7: error: too few arguments to function 'AdjustMinute'
-  147 |       AdjustMinute();
-      |       ^~~~~~~~~~~~
-../Core/Src/main.c:102:10: note: declared here
-  102 | uint32_t AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
-      |          ^~~~~~~~~~~~
-make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
-"make -j8 all" terminated with exit code 2. Build might be incomplete.
+arm-none-eabi-size   digitalclock.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17368	    120	   1824	  19312	   4b70	digitalclock.elf
+Finished building: default.size.stdout
+ 
 
-10:47:49 Build Failed. 5 errors, 1 warnings. (took 358ms)
+14:35:32 Build Finished. 0 errors, 0 warnings. (took 235ms)
 
