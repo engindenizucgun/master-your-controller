@@ -1,7 +1,7 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ledprojesi Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:switchliledprojesi Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:testproject Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:I2Cheatsensor Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:clockdebugproject Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:digitalclock Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:button_debug Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_project Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ledprojesi Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:testproject Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:I2Cheatsensor Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:clockdebugproject Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:digitalclock Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:button_debug Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:switchliledprojesi Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_project Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:I2Cheatsensor\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:I2Cheatsensor\ Debug/activeLaunchTarget=null\:---
@@ -11,5 +11,6 @@ org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:heatsensorproject\ Debug/active
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:heatsensorproject\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ledproject\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:nucleol433proje\ Debug/activeLaunchMode=run
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_project\ Debug/activeLaunchMode=run
 org.eclipse.launchbar.core.descriptorType.default\:led_state_machine\ Debug/activeLaunchMode=debug
 org.eclipse.launchbar.core.descriptorType.default\:led_state_machine\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local

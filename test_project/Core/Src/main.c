@@ -18,81 +18,64 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
 
-#define BUTTON_PIN GPIO_PIN_0
-#define BUTTON_PORT GPIOC
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-volatile uint32_t buttonClickCount = 0;
+/* USER CODE END Includes */
 
-volatile uint32_t lastButtonClickTime = 0;
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 
+/* USER CODE END PTD */
 
-typedef enum {
-    SWITCH_STATE_RELEASED,
-    SWITCH_STATE_PRESSED
-} SwitchState;
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
 
+/* USER CODE END PD */
 
-typedef enum {
-    WRITE_STATE_OFF,
-    WRITE_STATE_ON
-} WriteState;
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
 
-SwitchState switchState = SWITCH_STATE_RELEASED;
-WriteState writeState = WRITE_STATE_OFF;
+/* USER CODE END PM */
 
-
+/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart2;
 
+/* USER CODE BEGIN PV */
 
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
-void EXTI0_IRQHandler(void);
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
-
 /* USER CODE BEGIN PFP */
 
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_13)
+    {
+        /* Set the button press flag */
+  	  char buffer[50] = "Hello, World!\r\n";
+  	  HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
+    }
+
+    if (GPIO_Pin == GPIO_PIN_0)
+    {
+        /* Set the button press flag */
+  	  char buffer[50] = "Bonjour!\r\n";
+  	  HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
+    }
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    if (GPIO_Pin == GPIO_PIN_0)
-    {
-        /* Set the button press flag */
-    	uint32_t currentTime = HAL_GetTick();
-
-
-
-    			if ((currentTime - lastButtonClickTime) >= 500)
-
-    			{
-
-    				lastButtonClickTime = currentTime;
-
-
-
-
-
-    				char buffer[50] = "Hello, World!\r\n";
-    				HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
-
-
-
-    				}
-
-    			}
-
-    		}
-
-
 
 /* USER CODE END 0 */
 
@@ -110,7 +93,19 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
   SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
@@ -123,38 +118,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  int8_t currentSwitchState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0);
-	          if (currentSwitchState == GPIO_PIN_SET && switchState == SWITCH_STATE_RELEASED)
-	          {
-	              // Clear the flag
-	              switchState = SWITCH_STATE_PRESSED;
 
-	              // Print "Hello, World!"
-
-	          }
-	          else if (currentSwitchState == GPIO_PIN_RESET && switchState == SWITCH_STATE_PRESSED)
-	          {
-	              switchState = SWITCH_STATE_RELEASED;
-	              HAL_Delay(1000);
-	              	              char buffer[] = "Hello, World!\r\n";
-	              	              HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
-	          }
-	}
-  /* USER CODE END 3 */
+    /* USER CODE BEGIN 3 */
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /* USER CODE END 3 */
+}
 
 /**
   * @brief System Clock Configuration
@@ -302,10 +270,16 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : B1_Pin PC0 */
-  GPIO_InitStruct.Pin = B1_Pin|GPIO_PIN_0;
+  /*Configure GPIO pin : B1_Pin */
+  GPIO_InitStruct.Pin = B1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin SMPS_SW_Pin */
@@ -328,19 +302,21 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD4_GPIO_Port, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
-void EXTI0_IRQHandler(void)
-{
-    // Handle the external interrupt
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-}
+
 
 /* USER CODE END 4 */
-
 
 /**
   * @brief  This function is executed in case of error occurrence.
