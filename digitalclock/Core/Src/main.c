@@ -44,35 +44,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 
 
-//------------------------------------------------------EXTI PINS INIT---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void GPIO_Init(void) {
-
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
-
-
-    GPIOC->MODER &= ~(GPIO_MODER_MODE0 | GPIO_MODER_MODE1 | GPIO_MODER_MODE2);
-    GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD0 | GPIO_PUPDR_PUPD1 | GPIO_PUPDR_PUPD2);
-    GPIOC->PUPDR |= GPIO_PUPDR_PUPD0_1 | GPIO_PUPDR_PUPD1_1 | GPIO_PUPDR_PUPD2_1;
-
-    //SET
-    EXTI->IMR1 |= EXTI_IMR1_IM0;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT0; // Enable falling edge trigger
-
-    //INCREASE
-    EXTI->IMR1 |= EXTI_IMR1_IM1;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT1; // Enable falling edge trigger
-
-    //DECREASE
-    EXTI->IMR1 |= EXTI_IMR1_IM2;   // Enable interrupt
-    EXTI->FTSR1 |= EXTI_FTSR1_FT2; // Enable falling edge trigger
-
-
-    NVIC_EnableIRQ(EXTI0_IRQn);
-    NVIC_EnableIRQ(EXTI1_IRQn);
-    NVIC_EnableIRQ(EXTI2_IRQn);
-}
 //------------------------------------------------------CLOCK---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
@@ -110,100 +82,124 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
-//------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
-
-bool isButtonPressed(uint32_t GPIO_Pin) {
-    return (GPIOC->IDR & GPIO_Pin) == 0;
-}
-
-//------------------------------------------------------GET CURRENT TIME---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
-uint32_t getCurrentTimeInSeconds(void) {
-    uint32_t currentCounterValue = __HAL_TIM_GET_COUNTER(&htim2);
-    uint32_t timeInSeconds = currentCounterValue / 1000;
-    return timeInSeconds;
-}
-
-
-//------------------------------------------------------ADJUSTMENT MODE---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
-void EnterAdjustmentMode(void) {
-  adjustmentMode = true;
-  adjustmentStart = milliseconds;
-}
 
 //------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-void AdjustHour(uint32_t *hours) {
-  if (*hours >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
-	 (*hours)++;
-  } else if (*hours > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-     (*hours)--;
+uint32_t AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
+  if (*hours >= 0 && GPIO_Pin == GPIO_PIN_7) {
+    (*hours)++;
+  } else if (*hours > 0 && GPIO_Pin == GPIO_PIN_8) {
+    (*hours)--;
+  } else if (*hours == 23 && GPIO_Pin == GPIO_PIN_7) {
+    *hours = 0;
+  } else if (*hours == 0 && GPIO_Pin == GPIO_PIN_8) {
+    *hours = 23;
   }
-    else if (*hours == 23 && GPIOC->IDR & GPIO_IDR_ID1) {
-      *hours = 0;
-    }
-    else if (hours == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-      *hours = 23;
-    }
+  return *hours; // Return the updated value of hours
 }
 
-void AdjustMinute(uint32_t *minutes) {
-  if (*minutes >= 0 && GPIOC->IDR & GPIO_IDR_ID1) {
+uint32_t AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
+  if (*minutes >= 0 && GPIO_Pin == GPIO_PIN_7) {
     (*minutes)++;
-  } else if (*minutes > 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-	  (*minutes)--;
+  } else if (*minutes > 0 && GPIO_Pin == GPIO_PIN_8) {
+    (*minutes)--;
+  } else if (*minutes == 59 && GPIO_Pin == GPIO_PIN_7) {
+    *minutes = 0;
+  } else if (*minutes == 0 && GPIO_Pin == GPIO_PIN_8) {
+    *minutes = 59;
   }
-    else if (*minutes == 59 && GPIOC->IDR & GPIO_IDR_ID1) {
-      *minutes = 0;
-    }
-    else if (*minutes == 0 && GPIOC->IDR & GPIO_IDR_ID2) {
-      *minutes = 59;
-    }
-  }
+  return *minutes; // Return the updated value of minutes
+}
 
 
-//------------------------------------------------------EXTI HANDLERS---------------------------------------------------------------------------//
+//------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-// EXTI line 0 interrupt handler for the "SET" button
-void EXTI0_IRQHandler(void) {
-    if (EXTI->PR1 & EXTI_PR1_PIF0) {
-        EXTI->PR1 = EXTI_PR1_PIF0;
-        // Enter the adjustment mode when the "SET" button is pressed
-        EnterAdjustmentMode();
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_14)
+    {
+
+    	  bool adjustmentMode = true;
+    	  int adjustmentStart = HAL_GetTick();
+    	  int buttonclick = 1;
+
+
+    	//adjust hour
+    if (buttonclick == 1 && adjustmentMode == true) {
+
+    	if (GPIO_Pin == GPIO_PIN_7) {
+    		AdjustHour();
+    	}
+
+
+    	if (GPIO_Pin == GPIO_PIN_8) {
+    		AdjustMinute();
+
+
+
+    	}
+
+    	else if (adjustmentStart - milliseconds > 20000) {
+    	  milliseconds = adjustmentStart;
+    	  adjustmentMode = false;
+
+
+    	}
     }
+    if (buttonclick == 1 && GPIO_Pin == GPIO_PIN_14)
+        {
+
+        buttonclick++;
+
+    // adjust minute
+    if (buttonclick == 2 && adjustmentMode == true) {
+    	buttonclick++;
+    	if (GPIO_Pin == GPIO_PIN_7) {
+    	    		AdjustHour();
+    	    	}
+
+
+    	    	if (GPIO_Pin == GPIO_PIN_8) {
+    	    		AdjustMinute();
+
+
+
+    	    	}
+
+    	    	else if (adjustmentStart - milliseconds > 20000) {
+    	    		milliseconds = adjustmentStart;
+    	    	     adjustmentMode = false;
+    	    	}
+
+
+
+
+    	}
+    if (buttonclick == 3 && GPIO_Pin == GPIO_PIN_14)
+            {
+
+
+        adjustmentMode = false;
+    	buttonclick = 0;
+
+
+
+
+    }
+  }
+}
 }
 
-// EXTI line 1 interrupt handler for the "INCREASE" button
-void EXTI1_IRQHandler(void) {
-    if (EXTI->PR1 & EXTI_PR1_PIF1) {
-        EXTI->PR1 = EXTI_PR1_PIF1;
-        // Adjust the hour when the "INCREASE" button is pressed in the adjustment mode
-        if (adjustmentMode) {
-            AdjustHour(&hours);
-        }
-    }
-}
-
-// EXTI line 2 interrupt handler for the "DECREASE" button
-void EXTI2_IRQHandler(void) {
-    if (EXTI->PR1 & EXTI_PR1_PIF2) {
-        EXTI->PR1 = EXTI_PR1_PIF2;
-        // Adjust the minute when the "DECREASE" button is pressed in the adjustment mode
-        if (adjustmentMode) {
-            AdjustMinute(&minutes);
-        }
-    }
-}
 
 
-////kullanmiyosun
+
+
+
+
 
 //------------------------------------------------------MAIN FUNCTION---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
@@ -217,75 +213,46 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
 
-  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
-  GPIOC->MODER &= ~(GPIO_MODER_MODE0_Msk | GPIO_MODER_MODE1_Msk | GPIO_MODER_MODE2_Msk);
 
-  while (1)
-  {
-	  int currentValue = HAL_GetTick();
+  volatile uint32_t milliseconds = 0;
 
-	 	    if (currentValue - milliseconds >= 1000) {
-	 		  	  	  	  milliseconds = currentValue;
-	 	 	              uint32_t seconds = currentValue / 1000;
-	 	 	              uint32_t minutes = seconds / 60;
-	 	 	              uint32_t hours = minutes / 60;
-	 	 	              seconds %= 60;
-	 	 	              minutes %= 60;
-	 	 	              hours %= 24;
+  		    /* USER CODE END 2 */
+  		    /* Infinite loop */
+  		    /* USER CODE BEGIN WHILE */
+  		    while (1)
+  		    {
+  		  	    int currentValue = HAL_GetTick();
 
-
-
-
-	 	 	              char buffer[50];
-	 	 	              sprintf(buffer, "Clock Time: %02lu:%02lu:%02lu\r\n", hours, minutes,seconds);
-	 	 	              HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
-	 	 	          }
-
-	  if (GPIOC->IDR & GPIO_IDR_ID0) {
-		  	  	  int time2 = HAL_GetTick();
-	              buttonPressCount++;
-	              if (buttonPressCount == 1) {
-	                  buttonPressStart = milliseconds;
-	              }
-
-	              // Button released, handle different cases based on press count and adjustment mode
-	              if (buttonPressCount == 1 && !adjustmentMode) {
-	                  // Pressed once, start adjustment mode for hour
-	              	adjustmentMode = true;
-	              	  EXTI1_IRQHandler();
-	                  buttonPressCount++;
-	              }  else if (buttonPressCount == 2 && adjustmentMode) {
-	                  // Pressed twice, start adjustment mode for minute
-	            	  EXTI2_IRQHandler();
-	                  buttonPressCount++;
-	              }  else if (buttonPressCount == 3 && adjustmentMode) {
-	                  // Pressed once, exit adjustment mode and print adjusted clock
-	              	//printClockValue();
-	              	adjustmentMode = false;
-	              	buttonPressStart = 0;
-	                buttonPressCount = 0;
-
-	              }
-
-//	              // no action
-//	              if (time2 - milliseconds >= 20000) {
-//	            	  milliseconds = time2;
-//	            	  break;
-	              }
-
-	          }
+  		  	    if (currentValue - milliseconds >= 1000) {
+  		  		  	  	  	  milliseconds = currentValue;
+  		  	 	              uint32_t seconds = currentValue / 1000;
+  		  	 	              uint32_t minutes = seconds / 60;
+  		  	 	              uint32_t hours = minutes / 60;
+  		  	 	              seconds %= 60;
+  		  	 	              minutes %= 60;
+  		  	 	              hours %= 24;
 
 
 
-	  // print
-	}
+
+  		  	 	              char buffer[50];
+  		  	 	              sprintf(buffer, "Clock Time: %02lu:%02lu:%02lu\r\n", hours, minutes,seconds);
+  		  	 	              HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+  		  	 	          }
+  		  	 	      }
 
 
-/**
-  * @brief TIM2 Initialization Function
-  * @param None
-  * @retval None
-  */
+
+
+
+
+
+//
+	    }
+
+
+
+
 static void MX_TIM2_Init(void)
 {
 
@@ -384,11 +351,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : B1_Pin SET_Pin INCREASE_Pin DECREASE_Pin */
-  GPIO_InitStruct.Pin = B1_Pin|SET_Pin|INCREASE_Pin|DECREASE_Pin;
+  /*Configure GPIO pin : B1_Pin */
+  GPIO_InitStruct.Pin = B1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin SMPS_SW_Pin */
   GPIO_InitStruct.Pin = SMPS_EN_Pin|SMPS_V1_Pin|SMPS_SW_Pin;
@@ -409,6 +376,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD4_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : set_Pin decrease_Pin increase_Pin */
+  GPIO_InitStruct.Pin = set_Pin|decrease_Pin|increase_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

@@ -1,4 +1,4 @@
-09:49:36 **** Incremental Build of configuration Debug for project clockdebugproject ****
+08:56:37 **** Incremental Build of configuration Debug for project clockdebugproject ****
 make -j8 all 
 arm-none-eabi-size   clockdebugproject.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   clockdebugproject.elf
 Finished building: default.size.stdout
  
 
-09:49:36 Build Finished. 0 errors, 0 warnings. (took 578ms)
+08:56:38 Build Finished. 0 errors, 0 warnings. (took 369ms)
 

@@ -56,20 +56,29 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 
+volatile uint32_t debounce_time = 0; // Variable to store the last time a button was pressed
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == GPIO_PIN_13)
+    if (GPIO_Pin == GPIO_PIN_13 || GPIO_Pin == GPIO_PIN_0)
     {
-        /* Set the button press flag */
-  	  char buffer[50] = "Hello, World!\r\n";
-  	  HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
-    }
+        uint32_t current_time = HAL_GetTick();
+        if (current_time - debounce_time >= 100) // Check if at least 50ms have passed since the last button press
+        {
+            debounce_time = current_time; // Update the debounce time
 
-    if (GPIO_Pin == GPIO_PIN_0)
-    {
-        /* Set the button press flag */
-  	  char buffer[50] = "Bonjour!\r\n";
-  	  HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
+            /* Set the button press flag */
+            if (GPIO_Pin == GPIO_PIN_13)
+            {
+                char buffer[50] = "Hello, World!\r\n";
+                HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
+            }
+            else if (GPIO_Pin == GPIO_PIN_0)
+            {
+                char buffer[50] = "Bonjour!\r\n";
+                HAL_UART_Transmit(&huart2, (uint8_t*)buffer, 50, HAL_MAX_DELAY);
+            }
+        }
     }
 }
 /* USER CODE END PFP */
