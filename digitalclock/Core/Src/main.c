@@ -5,26 +5,31 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
+#include "stm32l4xx_hal.h"
+#include "stm32l4xx_hal_tim.h"
 //------------------------------------------------------HANDLEs---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
+TIM_HandleTypeDef htimDebounce;
 
 //------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 uint32_t milliseconds = 0;
 uint32_t seconds = 0;
-uint32_t minutes = 0; // Change this to uint32_t
-uint32_t hours = 0;   // Change this to uint32_t
+uint32_t minutes = 0;
+uint32_t hours = 0;
 
-uint32_t adjustmentStart = 0;
-uint32_t buttonPressCount = 0;
-uint32_t buttonPressStart = 0;
-uint32_t clockValue = 0;
+// Add these variables before the main function
+uint16_t adjustHourPin = GPIO_PIN_7;    // Replace GPIO_PIN_7 with your hour adjust pin
+uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute adjust pin
+
+
+bool adjustHourFlag = false;
+bool adjustMinuteFlag = false;
 
 
 
@@ -83,152 +88,174 @@ void SystemClock_Config(void)
 	}
 }
 
-//------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+void printer(void) {
+	char buffer[50];
+	sprintf(buffer, "Clock Time: %02lu:%02lu:%02lu\r\n", hours, minutes, seconds);
+	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+}
 
+//------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
-	if (*hours >= 0 && GPIO_Pin == GPIO_PIN_7) {
-		(*hours)++;
-	} else if (*hours > 0 && GPIO_Pin == GPIO_PIN_8) {
-		(*hours)--;
-	} else if (*hours == 23 && GPIO_Pin == GPIO_PIN_7) {
-		*hours = 0;
-	} else if (*hours == 0 && GPIO_Pin == GPIO_PIN_8) {
-		*hours = 23;
-	}
+    if (GPIO_Pin == GPIO_PIN_7) {
+        (*hours)++;
+        if (*hours >= 24) {
+            *hours = 0;
+        }
+        printer();
+    } else if (GPIO_Pin == GPIO_PIN_8) {
+    	(*hours)--;
+        if (*hours == 0) {
+            *hours = 23;
+        }
+        printer();
+    }
 }
 
 void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
-	if (*minutes >= 0 && GPIO_Pin == GPIO_PIN_7) {
-		(*minutes)++;
-	} else if (*minutes > 0 && GPIO_Pin == GPIO_PIN_8) {
-		(*minutes)--;
-	} else if (*minutes == 59 && GPIO_Pin == GPIO_PIN_7) {
-		*minutes = 0;
-	} else if (*minutes == 0 && GPIO_Pin == GPIO_PIN_8) {
-		*minutes = 59;
-	}
+    if (GPIO_Pin == GPIO_PIN_7) {
+        (*minutes)++;
+        if (*minutes >= 60) {
+            *minutes = 0;
+        }
+        printer();
+    } else if (GPIO_Pin == GPIO_PIN_8) {
+        if (*minutes == 0) {
+            *minutes = 59;
+        } else {
+            (*minutes)--;
+        }
+        printer();
+    }
 }
+
+
 
 
 //------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
-bool adjustmentMode = false;
-int buttonclick = 0;
+// Define constants for button modes
+#define MODE_HOUR_ADJUST 1
+#define MODE_MINUTE_ADJUST 2
+
+// Define initial mode as hour adjust
+int buttonMode = MODE_HOUR_ADJUST;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+    // Define the debounce time (adjust as needed)
+    const uint32_t debounceTimeMs = 50;
 
-	adjustmentStart = HAL_GetTick();
+    static uint32_t lastButtonPressTime = 0;
+    uint32_t currentTime = HAL_GetTick();
 
-	//adjust hour
-	if (  GPIO_Pin == GPIO_PIN_14) {
-		buttonclick++;
+    // Check for debounce
+    if (currentTime - lastButtonPressTime < debounceTimeMs)
+    {
+        return;
+    }
 
+    // Update the last button press time
+    lastButtonPressTime = currentTime;
 
-	    adjustmentMode = true;
-
-		while(buttonclick == 1) {
-			AdjustHour(&hours, GPIO_Pin);
-			if (  GPIO_Pin == GPIO_PIN_14) {
-				buttonclick++;
-			}
-			buttonclick = 0;
-
-
-		}
-
-
-
-
-
-		if (adjustmentStart - milliseconds > 20000) {
-			milliseconds = adjustmentStart;
-			adjustmentMode = false;
-			buttonclick = 0;
-
-
-		}
-	}
+    if (GPIO_Pin == set_Pin)
+    {
+        // Toggle the button mode between hour and minute adjust
+        if (buttonMode == MODE_HOUR_ADJUST)
+        {
+            buttonMode = MODE_MINUTE_ADJUST;
+            HAL_UART_Transmit(&huart2, (uint8_t*)"Minute Adjust Mode\r\n", 20, HAL_MAX_DELAY);
 
 
 
 
-	if (buttonclick == 2 && GPIO_Pin == GPIO_PIN_14) {
-		while(buttonclick == 2) {
-			AdjustMinute(&minutes, GPIO_Pin);
-			if (  GPIO_Pin == GPIO_PIN_14) {
-				buttonclick++;
-			}
-			buttonclick = 0;
-
-
-		}
-
-		if (adjustmentStart - milliseconds > 20000) {
-			milliseconds = adjustmentStart;
-			adjustmentMode = false;
-			buttonclick = 0;
 
 
 
-		}
-	}
-	if (buttonclick == 3 && GPIO_Pin == GPIO_PIN_14) {
-		adjustmentMode = false;
-		buttonclick = 0;
-	}
-
+        }
+        else
+        {
+            buttonMode = MODE_HOUR_ADJUST;
+            HAL_UART_Transmit(&huart2, (uint8_t*)"Hour Adjust Mode\r\n", 18, HAL_MAX_DELAY);
+        }
+    }
+    else if (GPIO_Pin == increase_Pin)
+    {
+        if (buttonMode == MODE_HOUR_ADJUST)
+        {
+            // Adjust the hour
+            AdjustHour(&hours, increase_Pin);
+        }
+        else if (buttonMode == MODE_MINUTE_ADJUST)
+        {
+            // Adjust the minute
+            AdjustMinute(&minutes, increase_Pin);
+        }
+    }
+    else if (GPIO_Pin == decrease_Pin)
+    {
+        if (buttonMode == MODE_HOUR_ADJUST)
+        {
+            // Adjust the hour
+            AdjustHour(&hours, decrease_Pin);
+        }
+        else if (buttonMode == MODE_MINUTE_ADJUST)
+        {
+            // Adjust the minute
+            AdjustMinute(&minutes, decrease_Pin);
+        }
+    }
 }
+
+
+
+
 
 //------------------------------------------------------MAIN FUNCTION---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
 int main(void)
 {
-
 	HAL_Init();
 	SystemClock_Config();
 	MX_USART2_UART_Init();
 	MX_GPIO_Init();
 	MX_TIM2_Init();
 
-
-
-
-
 	while (1)
 	{
+		// Update clock every second
 		int currentValue = HAL_GetTick();
+		if (currentValue - milliseconds >= 1000) {
+			milliseconds = currentValue;
+			seconds++;
 
-				if (currentValue - milliseconds >= 1000) {
-					milliseconds = currentValue;
-					seconds++;
+			if (seconds >= 60) {
+				seconds = 0;
+				minutes++;
 
-					if (seconds >= 60) {
-						seconds = 0;
-						minutes++;
+				if (minutes >= 60) {
+					minutes = 0;
+					hours++;
 
-						if (minutes >= 60) {
-							minutes = 0;
-							hours++;
-
-							if (hours >= 24) {
-								hours = 0;
-							}
-						}
+					if (hours >= 24) {
+						hours = 0;
 					}
+				}
+			}
 
-
-
-			char buffer[50];
-			sprintf(buffer, "Clock Time: %02lu:%02lu:%02lu\r\n", hours, minutes,seconds);
-			HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+			// Print the clock time every second
+			printer();
 		}
 	}
 }
 
+
+void StartDebounceTimer(void)
+{
+    HAL_TIM_Base_Start_IT(&htimDebounce);
+}
 
 
 
@@ -266,6 +293,10 @@ static void MX_TIM2_Init(void)
 	{
 		Error_Handler();
 	}
+	if (HAL_TIM_Base_Init(&htimDebounce) != HAL_OK)
+	    {
+	        Error_Handler();
+	    }
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
