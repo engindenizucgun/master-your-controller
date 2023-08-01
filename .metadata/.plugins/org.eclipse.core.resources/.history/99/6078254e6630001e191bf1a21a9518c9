@@ -34,12 +34,6 @@ uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute a
 // Variables to store the last button press timestamp
 uint32_t lastButtonPressTime = 0;
 
-
-bool isInDefaultMode = true;
-bool isInHourAdjustmentMode = false;
-bool isInMinuteAdjustmentMode = false;
-uint32_t setButtonPressStartTime = 0;
-
 //------------------------------------------------------FUNCTION PROTOTYPES--------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 
@@ -151,85 +145,60 @@ int buttonMode = MODE_HOUR_ADJUST;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    uint32_t currentTimestamp = HAL_GetTick();
 
-    // Check if the button press is within the debounce delay
-    if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
-    {
-        // Ignore this button press (debounce)
-        return;
-    }
+	uint32_t currentTimestamp = HAL_GetTick();
 
-    // Update the last button press timestamp
-    lastButtonPressTime = currentTimestamp;
+	    // Check if the button press is within the debounce delay
+	    if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
+	    {
+	        // Ignore this button press (debounce)
+	        return;
+	    }
 
-    // Add the variables to keep track of modes and set button press count
-    static bool isInDefaultMode = true;
-    static bool isInHourAdjustmentMode = false;
-    static bool isInMinuteAdjustmentMode = false;
-    static int setButtonPressCount = 0;
+	    // Update the last button press timestamp
+	    lastButtonPressTime = currentTimestamp;
 
-    if (GPIO_Pin == set_Pin)
-    {
-        setButtonPressCount++;
-
-        // If the "set" button is pressed once, switch to hour adjustment mode
-        if (isInDefaultMode && setButtonPressCount == 1)
-        {
-            isInDefaultMode = false;
-            isInHourAdjustmentMode = true;
-            setButtonPressCount = 0;
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rHour Adjustment Mode", 23, HAL_MAX_DELAY);
-        }
-        // If the "set" button is pressed once, switch to minute adjustment mode
-        else if (isInHourAdjustmentMode && setButtonPressCount == 1)
-        {
-            isInHourAdjustmentMode = false;
-            isInMinuteAdjustmentMode = true;
-            setButtonPressCount = 0;
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 25, HAL_MAX_DELAY);
-        }
-        // If the "set" button is pressed once, switch back to default mode
-        else if (isInMinuteAdjustmentMode && setButtonPressCount == 1)
-        {
-            isInMinuteAdjustmentMode = false;
-            isInDefaultMode = true;
-            setButtonPressCount = 0;
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rDefault Mode", 14, HAL_MAX_DELAY);
-        }
-    }
-    else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)
-    {
-        // Handle the increase and decrease buttons for hour adjustment
-        if (GPIO_Pin == increase_Pin)
-        {
-            // Adjust the hour
-            AdjustHour(&hours, increase_Pin);
-        }
-        else if (GPIO_Pin == decrease_Pin)
-        {
-            // Adjust the hour
-            AdjustHour(&hours, decrease_Pin);
-        }
-    }
-    else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInMinuteAdjustmentMode)
-    {
-        // Handle the increase and decrease buttons for minute adjustment
-        if (GPIO_Pin == increase_Pin)
-        {
-            // Adjust the minute
-            AdjustMinute(&minutes, increase_Pin);
-        }
-        else if (GPIO_Pin == decrease_Pin)
-        {
-            // Adjust the minute
-            AdjustMinute(&minutes, decrease_Pin);
-        }
-    }
+	if (GPIO_Pin == set_Pin)
+	{
+		// Toggle the button mode between hour and minute adjust
+		if (buttonMode == MODE_HOUR_ADJUST)
+		{
+			buttonMode = MODE_MINUTE_ADJUST;
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjust Mode", 20, HAL_MAX_DELAY);
+		}
+		else
+		{
+			buttonMode = MODE_HOUR_ADJUST;
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\rHour Adjust Mode", 18, HAL_MAX_DELAY);
+		}
+	}
+	else if (GPIO_Pin == increase_Pin)
+	{
+		if (buttonMode == MODE_HOUR_ADJUST)
+		{
+			// Adjust the hour
+			AdjustHour(&hours, increase_Pin);
+		}
+		else if (buttonMode == MODE_MINUTE_ADJUST)
+		{
+			// Adjust the minute
+			AdjustMinute(&minutes, increase_Pin);
+		}
+	}
+	else if (GPIO_Pin == decrease_Pin)
+	{
+		if (buttonMode == MODE_HOUR_ADJUST)
+		{
+			// Adjust the hour
+			AdjustHour(&hours, decrease_Pin);
+		}
+		else if (buttonMode == MODE_MINUTE_ADJUST)
+		{
+			// Adjust the minute
+			AdjustMinute(&minutes, decrease_Pin);
+		}
+	}
 }
-
-
-
 
 
 
