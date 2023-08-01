@@ -61,3 +61,24 @@ Finished building: default.size.stdout
  
 Finished building: digitalclock.list
  
+10:36:22 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-size   digitalclock.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17352	    124	   1892	  19368	   4ba8	digitalclock.elf
+Finished building: default.size.stdout
+ 
+10:59:53 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-size   digitalclock.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17352	    124	   1892	  19368	   4ba8	digitalclock.elf
+Finished building: default.size.stdout
+ 
+11:00:33 **** Incremental Build of configuration Debug for project digitalclock ****
+make -j8 all 
+arm-none-eabi-size   digitalclock.elf 
+   text	   data	    bss	    dec	    hex	filename
+  17352	    124	   1892	  19368	   4ba8	digitalclock.elf
+Finished building: default.size.stdout
+ 
