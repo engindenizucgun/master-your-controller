@@ -97,7 +97,7 @@ void SystemClock_Config(void)
 
 void printer(void) {
 	char buffer[50];
-	sprintf(buffer, "\rClock Time: %02lu:%02lu:%02lu", hours, minutes, seconds);
+	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 }
 
@@ -187,7 +187,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
             isInHourAdjustmentMode = false;
             isInMinuteAdjustmentMode = true;
             setButtonPressCount = 0;
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 25, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 23, HAL_MAX_DELAY);
         }
         // If the "set" button is pressed once, switch back to default mode
         else if (isInMinuteAdjustmentMode && setButtonPressCount == 1)
@@ -195,7 +195,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
             isInMinuteAdjustmentMode = false;
             isInDefaultMode = true;
             setButtonPressCount = 0;
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rDefault Mode", 14, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
         }
     }
     else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)

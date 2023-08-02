@@ -6,8 +6,11 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="SysTick"/>
+		<item key="selection" value="adjustHourFlag"/>
 		<list key="findhistory">
+			<item value="adjustHourFlag"/>
+			<item value="adjustMinuteFlag"/>
+			<item value="EXTI0_IRQHandler"/>
 			<item value="SysTick"/>
 			<item value="handleAdjustment"/>
 			<item value="INCREASE"/>
@@ -20,8 +23,6 @@
 			<item value="hi2c3"/>
 			<item value="buff"/>
 			<item value="TMP102"/>
-			<item value="TMP102_ADDR"/>
-			<item value="TMP"/>
 		</list>
 		<list key="replacehistory">
 		</list>

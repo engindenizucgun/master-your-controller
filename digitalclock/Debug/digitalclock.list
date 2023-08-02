@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00004214  08000190  08000190  00010190  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000000dc  080043a4  080043a4  000143a4  2**2
+  2 .rodata       000000ec  080043a4  080043a4  000143a4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08004480  08004480  00020074  2**0
+  3 .ARM.extab    00000000  08004490  08004490  00020074  2**0
                   CONTENTS
-  4 .ARM          00000008  08004480  08004480  00014480  2**2
+  4 .ARM          00000008  08004490  08004490  00014490  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08004488  08004488  00020074  2**0
+  5 .preinit_array 00000000  08004498  08004498  00020074  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08004488  08004488  00014488  2**2
+  6 .init_array   00000004  08004498  08004498  00014498  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  0800448c  0800448c  0001448c  2**2
+  7 .fini_array   00000004  0800449c  0800449c  0001449c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000074  20000000  08004490  00020000  2**2
+  8 .data         00000074  20000000  080044a0  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000170  20000074  08004504  00020074  2**2
+  9 .bss          00000170  20000074  08004514  00020074  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200001e4  08004504  000201e4  2**0
+ 10 ._user_heap_stack 00000604  200001e4  08004514  000201e4  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020074  2**0
                   CONTENTS, READONLY
@@ -525,7 +525,7 @@ void printer(void) {
  8000612:	b090      	sub	sp, #64	; 0x40
  8000614:	af02      	add	r7, sp, #8
 	char buffer[50];
-	sprintf(buffer, "\rClock Time: %02lu:%02lu:%02lu", hours, minutes, seconds);
+	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
  8000616:	4b0e      	ldr	r3, [pc, #56]	; (8000650 <printer+0x40>)
  8000618:	681a      	ldr	r2, [r3, #0]
  800061a:	4b0e      	ldr	r3, [pc, #56]	; (8000654 <printer+0x44>)
@@ -797,9 +797,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  80007a4:	4b32      	ldr	r3, [pc, #200]	; (8000870 <HAL_GPIO_EXTI_Callback+0x150>)
  80007a6:	2200      	movs	r2, #0
  80007a8:	601a      	str	r2, [r3, #0]
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 25, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 23, HAL_MAX_DELAY);
  80007aa:	f04f 33ff 	mov.w	r3, #4294967295
- 80007ae:	2219      	movs	r2, #25
+ 80007ae:	2217      	movs	r2, #23
  80007b0:	4935      	ldr	r1, [pc, #212]	; (8000888 <HAL_GPIO_EXTI_Callback+0x168>)
  80007b2:	4833      	ldr	r0, [pc, #204]	; (8000880 <HAL_GPIO_EXTI_Callback+0x160>)
  80007b4:	f002 fcac 	bl	8003110 <HAL_UART_Transmit>
@@ -828,9 +828,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  80007d6:	4b26      	ldr	r3, [pc, #152]	; (8000870 <HAL_GPIO_EXTI_Callback+0x150>)
  80007d8:	2200      	movs	r2, #0
  80007da:	601a      	str	r2, [r3, #0]
-            HAL_UART_Transmit(&huart2, (uint8_t*)"\rDefault Mode", 14, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
  80007dc:	f04f 33ff 	mov.w	r3, #4294967295
- 80007e0:	220e      	movs	r2, #14
+ 80007e0:	220d      	movs	r2, #13
  80007e2:	492a      	ldr	r1, [pc, #168]	; (800088c <HAL_GPIO_EXTI_Callback+0x16c>)
  80007e4:	4826      	ldr	r0, [pc, #152]	; (8000880 <HAL_GPIO_EXTI_Callback+0x160>)
  80007e6:	f002 fc93 	bl	8003110 <HAL_UART_Transmit>
@@ -928,11 +928,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  8000870:	200001c4 	.word	0x200001c4
  8000874:	20000000 	.word	0x20000000
  8000878:	200001c8 	.word	0x200001c8
- 800087c:	080043c4 	.word	0x080043c4
+ 800087c:	080043d4 	.word	0x080043d4
  8000880:	200000dc 	.word	0x200000dc
  8000884:	200001c9 	.word	0x200001c9
- 8000888:	080043dc 	.word	0x080043dc
- 800088c:	080043f4 	.word	0x080043f4
+ 8000888:	080043ec 	.word	0x080043ec
+ 800088c:	08004404 	.word	0x08004404
  8000890:	200001b8 	.word	0x200001b8
  8000894:	200001b4 	.word	0x200001b4
 
@@ -2120,7 +2120,7 @@ LoopForever:
   ldr r1, =_edata
  8000e58:	20000074 	.word	0x20000074
   ldr r2, =_sidata
- 8000e5c:	08004490 	.word	0x08004490
+ 8000e5c:	080044a0 	.word	0x080044a0
   ldr r2, =_sbss
  8000e60:	20000074 	.word	0x20000074
   ldr r4, =_ebss
@@ -3828,7 +3828,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
  8001810:	6013      	str	r3, [r2, #0]
  8001812:	e013      	b.n	800183c <HAL_RCC_OscConfig+0x298>
  8001814:	40021000 	.word	0x40021000
- 8001818:	08004404 	.word	0x08004404
+ 8001818:	08004414 	.word	0x08004414
  800181c:	20000004 	.word	0x20000004
  8001820:	20000008 	.word	0x20000008
  8001824:	4ba0      	ldr	r3, [pc, #640]	; (8001aa8 <HAL_RCC_OscConfig+0x504>)
@@ -5218,7 +5218,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8001fb6:	bd80      	pop	{r7, pc}
  8001fb8:	40022000 	.word	0x40022000
  8001fbc:	40021000 	.word	0x40021000
- 8001fc0:	08004404 	.word	0x08004404
+ 8001fc0:	08004414 	.word	0x08004414
  8001fc4:	20000004 	.word	0x20000004
  8001fc8:	20000008 	.word	0x20000008
 
@@ -5423,7 +5423,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  80020d0:	4770      	bx	lr
  80020d2:	bf00      	nop
  80020d4:	40021000 	.word	0x40021000
- 80020d8:	0800441c 	.word	0x0800441c
+ 80020d8:	0800442c 	.word	0x0800442c
  80020dc:	00f42400 	.word	0x00f42400
  80020e0:	007a1200 	.word	0x007a1200
 
@@ -5472,7 +5472,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  800211c:	4618      	mov	r0, r3
  800211e:	bd80      	pop	{r7, pc}
  8002120:	40021000 	.word	0x40021000
- 8002124:	08004414 	.word	0x08004414
+ 8002124:	08004424 	.word	0x08004424
 
 08002128 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -5499,7 +5499,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  8002148:	4618      	mov	r0, r3
  800214a:	bd80      	pop	{r7, pc}
  800214c:	40021000 	.word	0x40021000
- 8002150:	08004414 	.word	0x08004414
+ 8002150:	08004424 	.word	0x08004424
 
 08002154 <RCC_SetFlashLatencyFromMSIRange>:
             voltage range.
@@ -10011,10 +10011,10 @@ __STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
  8003a8a:	4798      	blx	r3
  8003a8c:	3601      	adds	r6, #1
  8003a8e:	e7f2      	b.n	8003a76 <__libc_init_array+0x1e>
- 8003a90:	08004488 	.word	0x08004488
- 8003a94:	08004488 	.word	0x08004488
- 8003a98:	08004488 	.word	0x08004488
- 8003a9c:	0800448c 	.word	0x0800448c
+ 8003a90:	08004498 	.word	0x08004498
+ 8003a94:	08004498 	.word	0x08004498
+ 8003a98:	08004498 	.word	0x08004498
+ 8003a9c:	0800449c 	.word	0x0800449c
 
 08003aa0 <memset>:
  8003aa0:	4402      	add	r2, r0
@@ -10332,11 +10332,11 @@ __STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
  8003d8c:	f000 f87a 	bl	8003e84 <_printf_i>
  8003d90:	e7eb      	b.n	8003d6a <_svfiprintf_r+0x1c2>
  8003d92:	bf00      	nop
- 8003d94:	0800444c 	.word	0x0800444c
- 8003d98:	08004456 	.word	0x08004456
+ 8003d94:	0800445c 	.word	0x0800445c
+ 8003d98:	08004466 	.word	0x08004466
  8003d9c:	00000000 	.word	0x00000000
  8003da0:	08003af1 	.word	0x08003af1
- 8003da4:	08004452 	.word	0x08004452
+ 8003da4:	08004462 	.word	0x08004462
 
 08003da8 <_printf_common>:
  8003da8:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -10672,8 +10672,8 @@ __STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
  80040c0:	f104 0619 	add.w	r6, r4, #25
  80040c4:	e7f5      	b.n	80040b2 <_printf_i+0x22e>
  80040c6:	bf00      	nop
- 80040c8:	0800445d 	.word	0x0800445d
- 80040cc:	0800446e 	.word	0x0800446e
+ 80040c8:	0800446d 	.word	0x0800446d
+ 80040cc:	0800447e 	.word	0x0800447e
 
 080040d0 <memcpy>:
  80040d0:	440a      	add	r2, r1
