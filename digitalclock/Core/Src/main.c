@@ -29,10 +29,11 @@ uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute a
 
 
 #define DEBOUNCE_DELAY_MS 200
+#define DEBOUNCE_DELAY_MS_ADJUST 100
 
 // Variables to store the last button press timestamp
 uint32_t lastButtonPressTime = 0;
-
+uint32_t lastAdjustButtonPressTime = 0;
 
 bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
@@ -158,14 +159,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	uint32_t currentTimestamp = HAL_GetTick();
 
 	// Check if the button press is within the debounce delay
-	if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
-	{
-		// Ignore this button press (debounce)
-		return;
-	}
 
-	// Update the last button press timestamp
-	lastButtonPressTime = currentTimestamp;
 
 	// Add the variables to keep track of modes and set button press count
 	static bool isInHourAdjustmentMode = false;
@@ -174,6 +168,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == set_Pin)
 	{
+
+		if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
+		{
+			// Ignore this button press (debounce)
+			return;
+		}
+
+		// Update the last button press timestamp
+		lastButtonPressTime = currentTimestamp;
+
 		setButtonPressCount++;
 
 		// If the "set" button is pressed once, switch to hour adjustment mode
@@ -205,6 +209,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)
 	{
+		if (currentTimestamp - lastAdjustButtonPressTime < DEBOUNCE_DELAY_MS_ADJUST)
+		{
+
+			// Ignore this button press (debounce)
+			return;
+		}
+
+		lastAdjustButtonPressTime = currentTimestamp;
 		// Handle the increase and decrease buttons for hour adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
@@ -219,6 +231,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInMinuteAdjustmentMode)
 	{
+		if (currentTimestamp - lastAdjustButtonPressTime < DEBOUNCE_DELAY_MS_ADJUST)
+		{
+
+			// Ignore this button press (debounce)
+			return;
+		}
+
+		lastAdjustButtonPressTime = currentTimestamp;
 		// Handle the increase and decrease buttons for minute adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
