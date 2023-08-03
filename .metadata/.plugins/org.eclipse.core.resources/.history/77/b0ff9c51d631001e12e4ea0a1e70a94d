@@ -32,6 +32,7 @@ uint32_t hours = 0;
 uint16_t adjustHourPin = GPIO_PIN_7;    // Replace GPIO_PIN_7 with your hour adjust pin
 uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute adjust pin
 
+
 #define DEBOUNCE_DELAY_MS 200
 #define DEBOUNCE_DELAY_MS_ADJUST 100
 
@@ -43,8 +44,6 @@ bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
 uint32_t setButtonPressStartTime = 0;
-
-bool adjustButtonPressed = false;
 
 //------------------------------------------------------FUNCTION PROTOTYPES--------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
@@ -105,7 +104,6 @@ void printer(void) {
 	char buffer[50];
 	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
-	adjustButtonPressed = false;
 }
 
 void AdjustmentPrinter(void) {
@@ -113,7 +111,6 @@ void AdjustmentPrinter(void) {
 	char buffer[50];
 	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:%02lu", hours, minutes, seconds);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
-
 }
 
 //------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
@@ -127,16 +124,12 @@ void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 			*hours = 0;
 		}
 		AdjustmentPrinter();
-		adjustButtonPressed = false;
-
 	} else if (GPIO_Pin == GPIO_PIN_8) {
 		(*hours)--;
 		if (*hours == 0) {
 			*hours = 23;
 		}
 		AdjustmentPrinter();
-		adjustButtonPressed = false;
-
 	}
 }
 
@@ -148,8 +141,6 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 			*minutes = 0;
 		}
 		AdjustmentPrinter();
-		adjustButtonPressed = false;
-
 	} else if (GPIO_Pin == GPIO_PIN_8) {
 		if (*minutes == 0) {
 			*minutes = 59;
@@ -157,8 +148,6 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 			(*minutes)--;
 		}
 		AdjustmentPrinter();
-		adjustButtonPressed = false;
-
 	}
 }
 
@@ -223,7 +212,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInDefaultMode = true;
 			setButtonPressCount = 0;
 			HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
-			adjustButtonPressed = false;
 		}
 
 
@@ -241,17 +229,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// Handle the increase and decrease buttons for hour adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-			isInDefaultMode = false;
-			adjustButtonPressed = true;
 			// Adjust the hour
 			AdjustHour(&hours, increase_Pin);
 		}
 		else if (GPIO_Pin == decrease_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-			isInDefaultMode = false;
-			adjustButtonPressed = true;
 			// Adjust the hour
 			AdjustHour(&hours, decrease_Pin);
 		}
@@ -271,19 +253,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// Handle the increase and decrease buttons for minute adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-
-			adjustButtonPressed = true;
-			isInDefaultMode = false;
 			// Adjust the minute
 			AdjustMinute(&minutes, increase_Pin);
 		}
 		else if (GPIO_Pin == decrease_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-
-			adjustButtonPressed = true;
-			isInDefaultMode = false;
 			// Adjust the minute
 			AdjustMinute(&minutes, decrease_Pin);
 		}
@@ -316,12 +290,31 @@ int main(void)
 	while (1)
 	{
 
-		if (!adjustButtonPressed && !isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
+		if (!isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
 		        {
 		            isInDefaultMode = true; // Exit the adjustment mode
 		            // Perform any other actions needed after exiting adjustment mode
 		        }
 
+		int zamanlayici = HAL_GetTick();
+		if (zamanlayici - globox >= 1000) {
+						globox = zamanlayici;
+						saniyeler++;
+
+						if (saniyeler >= 60) {
+							saniyeler = 0;
+							dakikalar++;
+
+							if (dakikalar >= 60) {
+								dakikalar = 0;
+								saatler++;
+
+								if (saatler >= 24) {
+									saatler = 0;
+								}
+							}
+						}
+					}
 
 		if (isInDefaultMode) {
 

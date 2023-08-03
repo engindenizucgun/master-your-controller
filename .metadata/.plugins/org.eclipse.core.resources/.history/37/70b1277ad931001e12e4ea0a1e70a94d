@@ -241,7 +241,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// Handle the increase and decrease buttons for hour adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
 			isInDefaultMode = false;
 			adjustButtonPressed = true;
 			// Adjust the hour
@@ -249,7 +248,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		else if (GPIO_Pin == decrease_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
 			isInDefaultMode = false;
 			adjustButtonPressed = true;
 			// Adjust the hour
@@ -271,8 +269,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// Handle the increase and decrease buttons for minute adjustment
 		if (GPIO_Pin == increase_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-
 			adjustButtonPressed = true;
 			isInDefaultMode = false;
 			// Adjust the minute
@@ -280,8 +276,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		else if (GPIO_Pin == decrease_Pin)
 		{
-			lastButtonPressTime = HAL_GetTick();
-
 			adjustButtonPressed = true;
 			isInDefaultMode = false;
 			// Adjust the minute
