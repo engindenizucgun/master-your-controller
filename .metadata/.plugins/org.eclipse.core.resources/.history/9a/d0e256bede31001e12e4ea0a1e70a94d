@@ -17,7 +17,10 @@ TIM_HandleTypeDef htimDebounce;
 
 //------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
+uint32_t globox = 0;
+uint32_t saniyeler = 0;
+uint32_t dakikalar = 0;
+uint32_t saatler = 0;
 
 
 uint32_t milliseconds = 0;
@@ -40,6 +43,8 @@ bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
 
+
+bool isSetButtonPressed = false;
 uint32_t setButtonPressStartTime = 0;
 
 

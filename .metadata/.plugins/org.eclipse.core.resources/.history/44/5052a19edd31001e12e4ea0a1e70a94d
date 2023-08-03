@@ -17,7 +17,10 @@ TIM_HandleTypeDef htimDebounce;
 
 //------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-
+uint32_t globox = 0;
+uint32_t saniyeler = 0;
+uint32_t dakikalar = 0;
+uint32_t saatler = 0;
 
 
 uint32_t milliseconds = 0;
@@ -39,8 +42,12 @@ uint32_t lastAdjustButtonPressTime = 0;
 bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
-
 uint32_t setButtonPressStartTime = 0;
+
+
+bool isSetButtonPressed = false;
+uint32_t setButtonPressStartTime = 0;
+#define SET_BUTTON_HOLD_DURATION 2000 // 2 seconds in milliseconds
 
 
 
@@ -197,10 +204,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		lastButtonPressTime = currentTimestamp;
 
 		setButtonPressCount++;
-
+		if (isInDefaultMode && setButtonPressCount == 1)
+		{
+			setButtonPressStartTime = currentTimestamp; // Update the setButtonPressStartTime
+		}
 
 		// If the "set" button is pressed once, switch to hour adjustment mode
-		if (isInDefaultMode && setButtonPressCount == 1 )
+		if (isInDefaultMode && setButtonPressCount == 1 && currentTimestamp - setButtonPressStartTime >= 2000)
 		{
 
 			isInDefaultMode = false;

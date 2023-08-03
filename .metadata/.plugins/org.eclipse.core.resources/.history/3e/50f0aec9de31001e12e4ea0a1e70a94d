@@ -40,6 +40,8 @@ bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
 
+
+bool isSetButtonPressed = false;
 uint32_t setButtonPressStartTime = 0;
 
 
