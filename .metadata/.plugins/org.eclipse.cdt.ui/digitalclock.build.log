@@ -1,10 +1,10 @@
-10:37:45 **** Incremental Build of configuration Debug for project digitalclock ****
+11:11:01 **** Incremental Build of configuration Debug for project digitalclock ****
 make -j8 all 
 arm-none-eabi-size   digitalclock.elf 
    text	   data	    bss	    dec	    hex	filename
-  17848	    124	   1908	  19880	   4da8	digitalclock.elf
+  18008	    124	   1924	  20056	   4e58	digitalclock.elf
 Finished building: default.size.stdout
  
 
-10:37:46 Build Finished. 0 errors, 0 warnings. (took 232ms)
+11:11:01 Build Finished. 0 errors, 0 warnings. (took 240ms)
 

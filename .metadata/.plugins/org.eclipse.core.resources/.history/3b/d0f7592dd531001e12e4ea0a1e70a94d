@@ -173,7 +173,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == set_Pin)
 	{
-
+		int referenceTime = HAL_GetTick();
 
 
 		if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
@@ -290,11 +290,9 @@ int main(void)
 	while (1)
 	{
 
-		if (!isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
-		        {
-		            isInDefaultMode = true; // Exit the adjustment mode
-		            // Perform any other actions needed after exiting adjustment mode
-		        }
+		if (globox - referenceTime >= 10000 && !isInDefaultMode) {
+					isInDefaultMode = true;
+				}
 
 		int zamanlayici = HAL_GetTick();
 		if (zamanlayici - globox >= 1000) {

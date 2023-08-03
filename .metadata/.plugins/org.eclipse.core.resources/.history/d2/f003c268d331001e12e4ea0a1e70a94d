@@ -17,11 +17,6 @@ TIM_HandleTypeDef htimDebounce;
 
 //------------------------------------------------------VARIABLES---------------------------------------------------------------------------//
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
-uint32_t globox = 0;
-uint32_t saniyeler = 0;
-uint32_t dakikalar = 0;
-uint32_t saatler = 0;
-
 
 uint32_t milliseconds = 0;
 uint32_t seconds = 0;
@@ -173,7 +168,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == set_Pin)
 	{
-
+		int referenceTime = HAL_GetTick();
 
 
 		if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
@@ -214,7 +209,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
 		}
 
+		if (milliseconds - referenceTime >= 10000 && !isInDefaultMode) {
 
+		}
 	}
 	else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)
 	{
@@ -289,32 +286,6 @@ int main(void)
 
 	while (1)
 	{
-
-		if (!isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
-		        {
-		            isInDefaultMode = true; // Exit the adjustment mode
-		            // Perform any other actions needed after exiting adjustment mode
-		        }
-
-		int zamanlayici = HAL_GetTick();
-		if (zamanlayici - globox >= 1000) {
-						globox = zamanlayici;
-						saniyeler++;
-
-						if (saniyeler >= 60) {
-							saniyeler = 0;
-							dakikalar++;
-
-							if (dakikalar >= 60) {
-								dakikalar = 0;
-								saatler++;
-
-								if (saatler >= 24) {
-									saatler = 0;
-								}
-							}
-						}
-					}
 
 		if (isInDefaultMode) {
 

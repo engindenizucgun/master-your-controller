@@ -173,7 +173,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == set_Pin)
 	{
-
+		int referenceTime = HAL_GetTick();
 
 
 		if (currentTimestamp - lastButtonPressTime < DEBOUNCE_DELAY_MS)
@@ -214,7 +214,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
 		}
 
-
+//		if (globox - referenceTime >= 10000 && !isInDefaultMode) {
+//			isInDefaultMode = true;
+//		}
 	}
 	else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)
 	{
@@ -289,12 +291,6 @@ int main(void)
 
 	while (1)
 	{
-
-		if (!isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
-		        {
-		            isInDefaultMode = true; // Exit the adjustment mode
-		            // Perform any other actions needed after exiting adjustment mode
-		        }
 
 		int zamanlayici = HAL_GetTick();
 		if (zamanlayici - globox >= 1000) {

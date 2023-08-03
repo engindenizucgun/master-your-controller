@@ -290,7 +290,7 @@ int main(void)
 	while (1)
 	{
 
-		if (!isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
+		if (!adjustButtonPressed && !isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
 		        {
 		            isInDefaultMode = true; // Exit the adjustment mode
 		            // Perform any other actions needed after exiting adjustment mode
