@@ -208,7 +208,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// If the "set" button is pressed once, switch to hour adjustment mode
 		if (isInDefaultMode && setButtonPressCount == 1 )
 		{
-
+			seconds = 0;
 
 
 			isInDefaultMode = false;
@@ -219,7 +219,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		// If the "set" button is pressed once, switch to minute adjustment mode
 		else if (isInHourAdjustmentMode && setButtonPressCount == 1)
 		{
-
+			seconds = 0;
 
 			isInDefaultMode = false;
 			isInHourAdjustmentMode = false;
