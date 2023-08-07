@@ -30,7 +30,7 @@ uint16_t adjustHourPin = GPIO_PIN_7;    // Replace GPIO_PIN_7 with your hour adj
 uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute adjust pin
 
 #define DEBOUNCE_DELAY_MS 200
-#define DEBOUNCE_DELAY_MS_ADJUST 100
+#define DEBOUNCE_DELAY_MS_ADJUST 150
 
 // Variables to store the last button press timestamp
 uint32_t lastButtonPressTime = 0;

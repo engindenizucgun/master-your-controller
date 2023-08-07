@@ -1,170 +1,84 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 #include <string.h>
 #include <stdio.h>
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
-
 UART_HandleTypeDef huart2;
 
-/* USER CODE BEGIN PV */
 
-/* USER CODE END PV */
 static const uint8_t TMP100_ADDR = 0x48 << 1;
 static const uint8_t REG_TEMP = 0x00;
 
-/* Private function prototypes -----------------------------------------------*/
+
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+
 	HAL_StatusTypeDef ret;
 	uint8_t buf[11];
 	int16_t val;
 	float temp_c;
-  /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
-  /* USER CODE BEGIN 2 */
 
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  buf[0] = REG_TEMP; //buffer = temp register
-	  ret = HAL_I2C_Master_Transmit(&hi2c1, TMP100_ADDR, buf, 1, HAL_MAX_DELAY); // return value of the function //pointer @I2C handle(It represents the specific I2C peripheral or bus that the communication will take place on.), address of sensor, buf, one byte, islemin bitmesi icin yeterli sure
-	  if ( ret != HAL_OK ) { //HAL_OK , execution basarili sekilde yapildigi anlamina geliyor
-		  strcpy((char*)buf, "Error Tx\r\n"); //strcpy, copy a string from one location to another (char*)buf, converts the buffer to a char* pointer. This means the buffer is converted to a character array
+	  buf[0] = REG_TEMP;
+	  ret = HAL_I2C_Master_Transmit(&hi2c1, TMP100_ADDR, buf, 1, HAL_MAX_DELAY);
+	  if ( ret != HAL_OK ) {
+		  strcpy((char*)buf, "Error Tx\r\n");
 	  } else {
 
 	  ret = HAL_I2C_Master_Receive(&hi2c1, TMP100_ADDR, buf, 2, HAL_MAX_DELAY);
 	  if ( ret != HAL_OK ) {
-		  strcpy((char*)buf, "Error Tx\r\n"); //
-
+		  strcpy((char*)buf, "Error Tx\r\n");
 	  }else{
 
-		  val = ((int16_t)buf[0] << 4) | (buf[1] >> 4); //12 bitlik bir integer icin buf[0] 4 birim sola shiftliyoruz, buf[1]i 4 birim saga daha sonra combine ediyoruz
+		  val = ((int16_t)buf[0] << 4) | (buf[1] >> 4);
 
-		  if (val > 0x7FF) { //eger value en buyuk hexadecimalden buyukse
-			  val |= 0xF000;//degeri eksi yap, most significant 4 bit 1 oluyor
+		  if (val > 0x7FF) {
+			  val |= 0xF000;
 		  }
 
 		  temp_c = val * 0.0625;
 		  temp_c *= 100;
 
-		  sprintf((char*)buf, // sprintf format the temp and store it as a string
-				  "%u.%02u C\n\r",
-				  ((unsigned int)temp_c / 100), //tam sayi kismi
-				  ((unsigned int)temp_c % 100));//ondalikli kismi
+		  sprintf((char*)buf,
+				  "%u.%02u C\r",
+				  ((unsigned int)temp_c / 100),
+				  ((unsigned int)temp_c % 100));
 
 	  }
 	 }
 
 
-
-
-    /* USER CODE END WHILE */
 	  HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	  HAL_Delay(500);
-    /* USER CODE BEGIN 3 */
+
   }
-  /* USER CODE END 3 */
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
   if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
   {
     Error_Handler();
   }
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -180,8 +94,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -195,21 +107,10 @@ void SystemClock_Config(void)
   }
 }
 
-/**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
+
 static void MX_I2C1_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
   hi2c1.Init.Timing = 0x10909CEC;
   hi2c1.Init.OwnAddress1 = 0;
