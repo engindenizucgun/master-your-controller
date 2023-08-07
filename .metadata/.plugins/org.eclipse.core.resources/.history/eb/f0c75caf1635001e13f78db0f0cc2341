@@ -311,8 +311,8 @@ int main(void)
 			}
 
 		}
+		htim2->Instance->ARR = 1000 - 1;
 		HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
-		HAL_Delay(1000);
 
 
 
