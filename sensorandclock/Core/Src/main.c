@@ -21,6 +21,9 @@ uint32_t seconds = 0;
 uint32_t minutes = 0;
 uint32_t hours = 0;
 
+uint8_t uartBuf[50]; // Buffer for UART communication
+
+
 uint16_t adjustHourPin = GPIO_PIN_7;
 uint16_t adjustMinutePin = GPIO_PIN_8;
 
@@ -44,23 +47,23 @@ static void MX_I2C1_Init(void);
 
 
 void printer(void) {
-	char buffer[50];
-	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Work Mode:             %02lu:%02lu:%02lu", hours, minutes, seconds);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 	adjustButtonPressed = false;
 }
 
 void AdjustmentPrinter(void) {
-	char buffer[50];
-	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Adjustment Mode:       %02lu:%02lu:00", hours, minutes);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 
 }
 
 void NOTAdjustedPrinter(void) {
-	char buffer[50];
-	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Adjustment Mode:       %02lu:%02lu:00", hours, minutes);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 	adjustButtonPressed = false;
 }
 
@@ -156,7 +159,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInDefaultMode = false;
 			isInHourAdjustmentMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rHour Adjustment Mode", 23, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Hour Adjustment Mode", 33, HAL_MAX_DELAY);
 		}
 		// If the "set" button is pressed once, switch to minute adjustment mode
 		else if (isInHourAdjustmentMode && setButtonPressCount == 1)
@@ -167,7 +170,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInHourAdjustmentMode = false;
 			isInMinuteAdjustmentMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 23, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Minute Adjustment Mode", 33, HAL_MAX_DELAY);
 		}
 		// If the "set" button is pressed once, switch back to default mode
 		else if (isInMinuteAdjustmentMode && setButtonPressCount == 1)
@@ -177,7 +180,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInMinuteAdjustmentMode = false;
 			isInDefaultMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Working Mode", 23, HAL_MAX_DELAY);
 			adjustButtonPressed = false;
 		}
 
@@ -306,8 +309,9 @@ int main(void)
 						((unsigned int)temp_c % 100));//ondalikli kismi
 
 			}
-			HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
+
 		}
+		HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
 
 
 
@@ -425,21 +429,9 @@ void SystemClock_Config(void)
 	}
 }
 
-/**
- * @brief I2C1 Initialization Function
- * @param None
- * @retval None
- */
+
 static void MX_I2C1_Init(void)
 {
-
-	/* USER CODE BEGIN I2C1_Init 0 */
-
-	/* USER CODE END I2C1_Init 0 */
-
-	/* USER CODE BEGIN I2C1_Init 1 */
-
-	/* USER CODE END I2C1_Init 1 */
 	hi2c1.Instance = I2C1;
 	hi2c1.Init.Timing = 0x00303D5B;
 	hi2c1.Init.OwnAddress1 = 0;
@@ -467,22 +459,12 @@ static void MX_I2C1_Init(void)
 	{
 		Error_Handler();
 	}
-	/* USER CODE BEGIN I2C1_Init 2 */
-	/* USER CODE END I2C1_Init 2 */
 
 }
 
-/**
- * @brief TIM2 Initialization Function
- * @param None
- * @retval None
- */
+
 static void MX_TIM2_Init(void)
 {
-
-	/* USER CODE BEGIN TIM2_Init 0 */
-
-	/* USER CODE END TIM2_Init 0 */
 
 	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
 	TIM_MasterConfigTypeDef sMasterConfig = {0};
@@ -525,13 +507,6 @@ static void MX_TIM2_Init(void)
 static void MX_USART2_UART_Init(void)
 {
 
-	/* USER CODE BEGIN USART2_Init 0 */
-
-	/* USER CODE END USART2_Init 0 */
-
-	/* USER CODE BEGIN USART2_Init 1 */
-
-	/* USER CODE END USART2_Init 1 */
 	huart2.Instance = USART2;
 	huart2.Init.BaudRate = 115200;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -546,9 +521,7 @@ static void MX_USART2_UART_Init(void)
 	{
 		Error_Handler();
 	}
-	/* USER CODE BEGIN USART2_Init 2 */
 
-	/* USER CODE END USART2_Init 2 */
 
 }
 
@@ -606,18 +579,6 @@ static void MX_GPIO_Init(void)
 	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-
-	HAL_NVIC_SetPriority(B1_EXTI_IRQn, 0, 0); // Higher priority for button
-	    HAL_NVIC_EnableIRQ(B1_EXTI_IRQn);
-
-	    // ... (other GPIO configurations)
-
-	    /* Configure I2C interrupt */
-	    HAL_NVIC_SetPriority(I2C1_EV_IRQn, 1, 0); // Lower priority for I2C
-	    HAL_NVIC_SetPriority(I2C1_ER_IRQn, 1, 0); // Lower priority for I2C errors
-	    HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
-	    HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
 
 	/* EXTI interrupt init*/
 	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);

@@ -6,23 +6,23 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="adjustHourFlag"/>
+		<item key="selection" value="isInHourAdjustmentMode"/>
 		<list key="findhistory">
+			<item value="isInHourAdjustmentMode"/>
+			<item value="lastButtonPressTime"/>
+			<item value="adjustHourPin"/>
+			<item value="htimDebounce"/>
+			<item value="htim2"/>
+			<item value="milliseconds"/>
+			<item value="&quot;\rAdjustment Mode"/>
+			<item value="\rAdjustment Mode"/>
+			<item value="\rAdjustment Mode:"/>
+			<item value="rAdjustment"/>
 			<item value="adjustHourFlag"/>
 			<item value="adjustMinuteFlag"/>
 			<item value="EXTI0_IRQHandler"/>
 			<item value="SysTick"/>
 			<item value="handleAdjustment"/>
-			<item value="INCREASE"/>
-			<item value="INCREASE_Pin"/>
-			<item value="UART_MODE_TX_RX"/>
-			<item value="LD4"/>
-			<item value="GPIOA"/>
-			<item value="SystemClock"/>
-			<item value="System"/>
-			<item value="hi2c3"/>
-			<item value="buff"/>
-			<item value="TMP102"/>
 		</list>
 		<list key="replacehistory">
 		</list>

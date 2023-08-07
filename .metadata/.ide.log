@@ -1,0 +1,53 @@
+2023-08-07 09:23:55,140 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2023-08-07 09:44:31,396 [INFO] I2cTimingTraitement:330 - 0x00303D5B
+2023-08-07 09:44:31,427 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-08-07 09:44:50,319 [INFO] I2cTimingTraitement:330 - 0x00303D5B
+2023-08-07 09:44:50,350 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-08-07 10:05:01,305 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 797963264 Bytes (1073741824)
+2023-08-07 10:05:03,292 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 920124416 Bytes (1073741824)
+2023-08-07 10:05:04,880 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 787875560 Bytes (1073741824)
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8L4
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-08-07 10:05:05,166 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-08-07 10:05:05,166 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.1.202304191431\\db\
+2023-08-07 10:05:05,525 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\license.tmp_save
+2023-08-07 10:05:05,663 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\license.tmp
+2023-08-07 10:05:05,796 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\gpio.tmp_save
+2023-08-07 10:05:05,964 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\gpio.tmp
+2023-08-07 10:05:06,308 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\stm32l4xx_it.c_save
+2023-08-07 10:05:06,496 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\stm32l4xx_it.c
+2023-08-07 10:05:06,511 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\stm32l4xx_it.h_save
+2023-08-07 10:05:06,574 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\stm32l4xx_it.h
+2023-08-07 10:05:06,605 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\stm32l4xx_hal_msp.c_save
+2023-08-07 10:05:06,714 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\stm32l4xx_hal_msp.c
+2023-08-07 10:05:06,714 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\system.tmp_save
+2023-08-07 10:05:06,761 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\MXTmpFiles\system.tmp
+2023-08-07 10:05:06,792 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\stm32l4xx_hal_conf.h_save
+2023-08-07 10:05:06,901 [INFO] CodeEngine:335 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\stm32l4xx_hal_conf.h
+2023-08-07 10:05:06,932 [WARN] IPConfigManager:3431 - IP not found : TIM
+2023-08-07 10:05:06,932 [WARN] CodeGenerator:3754 - IP not found : null
+2023-08-07 10:05:06,948 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\main.h_save
+2023-08-07 10:05:07,042 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Inc\main.h
+2023-08-07 10:05:07,057 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\main.c_save
+2023-08-07 10:05:07,213 [INFO] CodeEngine:279 - Generated code: C:\Users\ARGE-PC1\STM32CubeIDE\workspace_1.12.1\sensorandclock\Core\Src\main.c
+2023-08-07 10:05:08,088 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 265mS.
+2023-08-07 10:05:08,088 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-08-07 10:05:08,479 [INFO] ConfigFileManager:1483 - The Die is : DIE435
+2023-08-07 10:05:08,479 [INFO] ApiDbMcu:507 - Load IP Config File for FATFS
+2023-08-07 10:05:08,494 [INFO] ApiDbMcu:507 - Load IP Config File for FREERTOS
+2023-08-07 10:05:08,510 [INFO] ApiDbMcu:507 - Load IP Config File for TOUCHSENSING
+2023-08-07 10:05:08,526 [INFO] ApiDbMcu:507 - Load IP Config File for USB_DEVICE
+2023-08-07 10:05:11,029 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 2941mS.
+2023-08-07 10:05:11,029 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.
+2023-08-07 10:05:11,029 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.
+2023-08-07 10:45:29,487 [INFO] I2cTimingTraitement:330 - 0x00303D5B
+2023-08-07 10:45:29,509 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-08-07 12:32:10,085 [INFO] I2cTimingTraitement:330 - 0x00303D5B
+2023-08-07 12:32:10,117 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-08-07 12:33:59,488 [INFO] I2cTimingTraitement:330 - 0x00303D5B
+2023-08-07 12:33:59,513 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-08-07 12:36:22,988 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 793330696 Bytes (1073741824)
