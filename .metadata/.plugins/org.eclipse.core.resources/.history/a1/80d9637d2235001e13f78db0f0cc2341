@@ -1,5 +1,3 @@
-
-
 #include "main.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -10,36 +8,33 @@
 
 TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
+I2C_HandleTypeDef hi2c1;
 
-TIM_HandleTypeDef htimDebounce;
+static const uint8_t TMP100_ADDR = 0x48 << 1;
+static const uint8_t REG_TEMP = 0x00;
+
+#define DEBOUNCE_DELAY_MS 200
+#define DEBOUNCE_DELAY_MS_ADJUST 150
 
 uint32_t milliseconds = 0;
 uint32_t seconds = 0;
 uint32_t minutes = 0;
 uint32_t hours = 0;
 
-// Add these variables before the main function
-uint16_t adjustHourPin = GPIO_PIN_7;    // Replace GPIO_PIN_7 with your hour adjust pin
-uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute adjust pin
+uint8_t uartBuf[50]; // Buffer for UART communication
 
-#define DEBOUNCE_DELAY_MS 200
-#define DEBOUNCE_DELAY_MS_ADJUST 150
 
-// Variables to store the last button press timestamp
+uint16_t adjustHourPin = GPIO_PIN_7;
+uint16_t adjustMinutePin = GPIO_PIN_8;
+
 uint32_t lastButtonPressTime = 0;
 uint32_t lastAdjustButtonPressTime = 0;
+uint32_t setButtonPressStartTime = 0;
 
 bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
-
-uint32_t setButtonPressStartTime = 0;
-
-
-
 bool adjustButtonPressed = false;
-
-
 
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin);
 void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin);
@@ -48,66 +43,32 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_I2C1_Init(void);
 
-
-
-
-void SystemClock_Config(void)
-{
-	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-
-	if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
-
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
-
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-	{
-		Error_Handler();
-	}
-}
 
 void printer(void) {
-	char buffer[50];
-	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Work Mode:             %02lu:%02lu:%02lu", hours, minutes, seconds);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 	adjustButtonPressed = false;
 }
 
 void AdjustmentPrinter(void) {
-	char buffer[50];
-	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Adjustment Mode:       %02lu:%02lu:00", hours, minutes);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 
 }
 
 void NOTAdjustedPrinter(void) {
-	char buffer[50];
-	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	sprintf((char*)uartBuf, "\r            Adjustment Mode:       %02lu:%02lu:00", hours, minutes);
+	HAL_UART_Transmit(&huart2, (uint8_t*)uartBuf, strlen((char*)uartBuf), HAL_MAX_DELAY);
+
 	adjustButtonPressed = false;
 }
 
+//------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 
 
@@ -155,6 +116,11 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 
 
 
+//------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
+
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	uint32_t currentTimestamp = HAL_GetTick();
@@ -193,7 +159,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInDefaultMode = false;
 			isInHourAdjustmentMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rHour Adjustment Mode", 23, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Hour Adjustment Mode", 33, HAL_MAX_DELAY);
 		}
 		// If the "set" button is pressed once, switch to minute adjustment mode
 		else if (isInHourAdjustmentMode && setButtonPressCount == 1)
@@ -204,7 +170,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInHourAdjustmentMode = false;
 			isInMinuteAdjustmentMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rMinute Adjustment Mode", 23, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Minute Adjustment Mode", 33, HAL_MAX_DELAY);
 		}
 		// If the "set" button is pressed once, switch back to default mode
 		else if (isInMinuteAdjustmentMode && setButtonPressCount == 1)
@@ -214,7 +180,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			isInMinuteAdjustmentMode = false;
 			isInDefaultMode = true;
 			setButtonPressCount = 0;
-			HAL_UART_Transmit(&huart2, (uint8_t*)"\rWorking Mode", 13, HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, (uint8_t*)"\r          Working Mode", 23, HAL_MAX_DELAY);
 			adjustButtonPressed = false;
 		}
 
@@ -282,22 +248,79 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 
+/* USER CODE END 0 */
 
+/**
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
+	/* USER CODE BEGIN 1 */
+	HAL_StatusTypeDef ret;
+	uint8_t buf[11];
+	int16_t val;
+	float temp_c;
+
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 	SystemClock_Config();
-	MX_USART2_UART_Init();
 	MX_GPIO_Init();
+	MX_USART2_UART_Init();
 	MX_TIM2_Init();
-
+	MX_I2C1_Init();
 
 
 
 
 	while (1)
 	{
+
+
+
+		/* USER CODE END WHILE */
+		buf[0] = REG_TEMP; //buffer = temp register
+		ret = HAL_I2C_Master_Transmit(&hi2c1, TMP100_ADDR, buf, 1, HAL_MAX_DELAY); // return value of the function //pointer @I2C handle(It represents the specific I2C peripheral or bus that the communication will take place on.), address of sensor, buf, one byte, islemin bitmesi icin yeterli sure
+		if ( ret != HAL_OK ) { //HAL_OK , execution basarili sekilde yapildigi anlamina geliyor
+			strcpy((char*)buf, "Error Tx\r"); //strcpy, copy a string from one location to another (char*)buf, converts the buffer to a char* pointer. This means the buffer is converted to a character array
+		} else {
+
+			ret = HAL_I2C_Master_Receive(&hi2c1, TMP100_ADDR, buf, 2, HAL_MAX_DELAY);
+			if ( ret != HAL_OK ) {
+				strcpy((char*)buf, "Error Tx\r"); //
+
+			}else{
+
+				val = ((int16_t)buf[0] << 4) | (buf[1] >> 4); //12 bitlik bir integer icin buf[0] 4 birim sola shiftliyoruz, buf[1]i 4 birim saga daha sonra combine ediyoruz
+
+				if (val > 0x7FF) { //eger value en buyuk hexadecimalden buyukse
+					val |= 0xF000;//degeri eksi yap, most significant 4 bit 1 oluyor
+				}
+
+				temp_c = val * 0.0625;
+				temp_c *= 100;
+
+				sprintf((char*)buf, // sprintf format the temp and store it as a string
+						"\r%u.%02u C",
+						((unsigned int)temp_c / 100), //tam sayi kismi
+						((unsigned int)temp_c % 100));//ondalikli kismi
+
+			}
+
+		}
+		HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
+		HAL_Delay(1000);
+
+
+
+
+
+
+
+
 
 		if (!adjustButtonPressed && !isInDefaultMode && HAL_GetTick() - lastButtonPressTime >= 10000)
 		{
@@ -333,6 +356,7 @@ int main(void)
 
 				// Print the clock time every second
 				printer();
+				HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
 			}
 		}
 
@@ -358,26 +382,91 @@ int main(void)
 					}
 				}
 				AdjustmentPrinter();
+				HAL_UART_Transmit(&huart2, buf, strlen((char*)buf), HAL_MAX_DELAY);
 			}
 
 		}
 	}
 }
-
-
-void StartDebounceTimer(void)
+/**
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void)
 {
-	HAL_TIM_Base_Start_IT(&htimDebounce);
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+	/** Configure the main internal regulator output voltage
+	 */
+	if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
+
+static void MX_I2C1_Init(void)
+{
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.Timing = 0x00303D5B;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/** Configure Analogue filter
+	 */
+	if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/** Configure Digital filter
+	 */
+	if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+}
 
 
 static void MX_TIM2_Init(void)
 {
-
-	/* USER CODE BEGIN TIM2_Init 0 */
-
-	/* USER CODE END TIM2_Init 0 */
 
 	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
 	TIM_MasterConfigTypeDef sMasterConfig = {0};
@@ -406,10 +495,6 @@ static void MX_TIM2_Init(void)
 	{
 		Error_Handler();
 	}
-	if (HAL_TIM_Base_Init(&htimDebounce) != HAL_OK)
-	{
-		Error_Handler();
-	}
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
@@ -424,13 +509,6 @@ static void MX_TIM2_Init(void)
 static void MX_USART2_UART_Init(void)
 {
 
-	/* USER CODE BEGIN USART2_Init 0 */
-
-	/* USER CODE END USART2_Init 0 */
-
-	/* USER CODE BEGIN USART2_Init 1 */
-
-	/* USER CODE END USART2_Init 1 */
 	huart2.Instance = USART2;
 	huart2.Init.BaudRate = 115200;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -445,9 +523,7 @@ static void MX_USART2_UART_Init(void)
 	{
 		Error_Handler();
 	}
-	/* USER CODE BEGIN USART2_Init 2 */
 
-	/* USER CODE END USART2_Init 2 */
 
 }
 
@@ -477,7 +553,7 @@ static void MX_GPIO_Init(void)
 	/*Configure GPIO pin : B1_Pin */
 	GPIO_InitStruct.Pin = B1_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin SMPS_SW_Pin */

@@ -1,3 +1,6 @@
+
+
+
 #include "main.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -68,7 +71,7 @@ void NOTAdjustedPrinter(void) {
 }
 
 //------------------------------------------------------ADJUST HOUR & MINUTE---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 
 
@@ -117,7 +120,7 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 
 
 //------------------------------------------------------BUTTON PRESSED---------------------------------------------------------------------------//
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000//
+
 
 
 
@@ -125,10 +128,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	uint32_t currentTimestamp = HAL_GetTick();
 
-	// Check if the button press is within the debounce delay
 
-
-	// Add the variables to keep track of modes and set button press count
 	static bool isInHourAdjustmentMode = false;
 	static bool isInMinuteAdjustmentMode = false;
 	static int setButtonPressCount = 0;
@@ -248,15 +248,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
- * @brief  The application entry point.
- * @retval int
- */
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
@@ -388,10 +379,7 @@ int main(void)
 		}
 	}
 }
-/**
- * @brief System Clock Configuration
- * @retval None
- */
+
 void SystemClock_Config(void)
 {
 	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -495,17 +483,11 @@ static void MX_TIM2_Init(void)
 	{
 		Error_Handler();
 	}
-	/* USER CODE BEGIN TIM2_Init 2 */
 
-	/* USER CODE END TIM2_Init 2 */
 
 }
 
-/**
- * @brief USART2 Initialization Function
- * @param None
- * @retval None
- */
+
 static void MX_USART2_UART_Init(void)
 {
 
@@ -527,70 +509,58 @@ static void MX_USART2_UART_Init(void)
 
 }
 
-/**
- * @brief GPIO Initialization Function
- * @param None
- * @retval None
- */
+
 static void MX_GPIO_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	/* USER CODE BEGIN MX_GPIO_Init_1 */
-	/* USER CODE END MX_GPIO_Init_1 */
 
-	/* GPIO Ports Clock Enable */
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	__HAL_RCC_GPIOH_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 
-	/*Configure GPIO pin Output Level */
+
 	HAL_GPIO_WritePin(GPIOA, SMPS_EN_Pin|SMPS_V1_Pin|SMPS_SW_Pin, GPIO_PIN_RESET);
 
-	/*Configure GPIO pin Output Level */
+
 	HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
 
-	/*Configure GPIO pin : B1_Pin */
+
 	GPIO_InitStruct.Pin = B1_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin SMPS_SW_Pin */
 	GPIO_InitStruct.Pin = SMPS_EN_Pin|SMPS_V1_Pin|SMPS_SW_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	/*Configure GPIO pin : SMPS_PG_Pin */
 	GPIO_InitStruct.Pin = SMPS_PG_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(SMPS_PG_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pin : LD4_Pin */
 	GPIO_InitStruct.Pin = LD4_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(LD4_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : set_Pin decrease_Pin increase_Pin */
 	GPIO_InitStruct.Pin = set_Pin|decrease_Pin|increase_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	/* EXTI interrupt init*/
+
 	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-	/* USER CODE BEGIN MX_GPIO_Init_2 */
-	/* USER CODE END MX_GPIO_Init_2 */
+
 }
 
 /* USER CODE BEGIN 4 */
