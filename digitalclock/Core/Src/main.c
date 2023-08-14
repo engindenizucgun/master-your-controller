@@ -9,37 +9,30 @@
 
 
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htimDebounce;
 UART_HandleTypeDef huart2;
 
-TIM_HandleTypeDef htimDebounce;
 
 uint32_t milliseconds = 0;
 uint32_t seconds = 0;
 uint32_t minutes = 0;
 uint32_t hours = 0;
 
-// Add these variables before the main function
 uint16_t adjustHourPin = GPIO_PIN_7;    // Replace GPIO_PIN_7 with your hour adjust pin
 uint16_t adjustMinutePin = GPIO_PIN_8;  // Replace GPIO_PIN_8 with your minute adjust pin
 
-#define DEBOUNCE_DELAY_MS 200
-#define DEBOUNCE_DELAY_MS_ADJUST 150
-
-// Variables to store the last button press timestamp
 uint32_t lastButtonPressTime = 0;
 uint32_t lastAdjustButtonPressTime = 0;
+uint32_t setButtonPressStartTime = 0;
 
 bool isInDefaultMode = true;
 bool isInHourAdjustmentMode = false;
 bool isInMinuteAdjustmentMode = false;
-
-uint32_t setButtonPressStartTime = 0;
-
-
-
 bool adjustButtonPressed = false;
 
 
+#define DEBOUNCE_DELAY_MS 200
+#define DEBOUNCE_DELAY_MS_ADJUST 150
 
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin);
 void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin);
@@ -86,28 +79,28 @@ void SystemClock_Config(void)
 		Error_Handler();
 	}
 }
-
+//clock printer while working mode
 void printer(void) {
 	char buffer[50];
 	sprintf(buffer, "\rWork Mode:                 %02lu:%02lu:%02lu", hours, minutes, seconds);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 	adjustButtonPressed = false;
 }
-
+//clock printer while adjustment mode
 void AdjustmentPrinter(void) {
 	char buffer[50];
 	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 
 }
-
+//clock printer when no adjustments are made for a certain time
 void NOTAdjustedPrinter(void) {
 	char buffer[50];
 	sprintf(buffer, "\rAdjustment Mode:           %02lu:%02lu:00", hours, minutes);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 	adjustButtonPressed = false;
 }
-
+//hour adjustment algorithm
 void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 
 
@@ -129,7 +122,7 @@ void AdjustHour(uint32_t *hours, uint16_t GPIO_Pin) {
 
 	}
 }
-
+//minute adjustment algorithm
 void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 
 	if (GPIO_Pin == GPIO_PIN_7) {
@@ -154,7 +147,7 @@ void AdjustMinute(uint32_t *minutes, uint16_t GPIO_Pin) {
 
 
 
-
+//interrupt functions for each button
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	uint32_t currentTimestamp = HAL_GetTick();
@@ -167,6 +160,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	static bool isInMinuteAdjustmentMode = false;
 	static int setButtonPressCount = 0;
 
+	//when pressed set button
 	if (GPIO_Pin == set_Pin)
 	{
 
@@ -219,7 +213,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 
 
-	}
+	}//while hour adjustment mode, execute functions when increase or decrease is pressed
 	else if ((GPIO_Pin == increase_Pin || GPIO_Pin == decrease_Pin) && isInHourAdjustmentMode)
 	{
 		if (currentTimestamp - lastAdjustButtonPressTime < DEBOUNCE_DELAY_MS_ADJUST)
@@ -230,7 +224,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 
 		lastAdjustButtonPressTime = currentTimestamp;
-		// Handle the increase and decrease buttons for hour adjustment
+		//execute when pressed increase
 		if (GPIO_Pin == increase_Pin)
 		{
 			lastButtonPressTime = HAL_GetTick();
@@ -239,6 +233,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			// Adjust the hour
 			AdjustHour(&hours, increase_Pin);
 		}
+		//execute when pressed decrease
 		else if (GPIO_Pin == decrease_Pin)
 		{
 			lastButtonPressTime = HAL_GetTick();
@@ -260,7 +255,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 
 		lastAdjustButtonPressTime = currentTimestamp;
-		// Handle the increase and decrease buttons for minute adjustment
+		//execute when pressed increase
 		if (GPIO_Pin == increase_Pin)
 		{
 			lastButtonPressTime = HAL_GetTick();
@@ -270,6 +265,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			// Adjust the minute
 			AdjustMinute(&minutes, increase_Pin);
 		}
+		//execute when pressed decrease
 		else if (GPIO_Pin == decrease_Pin)
 		{
 			lastButtonPressTime = HAL_GetTick();
@@ -286,6 +282,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 int main(void)
 {
+	//initialize, HAL, Clock, UART, GPIOs and TIM
 	HAL_Init();
 	SystemClock_Config();
 	MX_USART2_UART_Init();
